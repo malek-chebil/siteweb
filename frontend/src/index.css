@@ -1,0 +1,371 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: url('/assets/home8.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-color: #f8f9fa; /* Fallback si l'image ne charge pas */
+  color: #212529;
+  line-height: 1.6;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Overlay pour améliorer la lisibilité du contenu */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.20);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Assurer que le contenu principal est au-dessus de l'overlay */
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* Style pour les Paper/Card components - fond plus opaque pour texte noir */
+.mantine-Paper-root:not(.hero-image-container):not(.listing-card):not(.listing-card-compact):not(.listing-card-responsive):not(.mantine-Modal-content):not(.mantine-Drawer-content) {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 2px solid rgba(255, 195, 0, 0.3) !important;
+}
+
+/* Cartes de listings - fond plus opaque pour texte noir */
+.listing-card,
+.listing-card-compact,
+.listing-card-responsive {
+  background-color: rgba(255, 255, 255, 0.90) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 2px solid rgba(255, 195, 0, 0.4) !important;
+}
+
+/* Style pour les Drawer - fond plus opaque pour texte noir */
+.mantine-Drawer-content {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 2px solid rgba(255, 195, 0, 0.3) !important;
+}
+
+/* Style pour les Modal - fond plus opaque pour texte noir */
+.mantine-Modal-content {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 2px solid rgba(255, 195, 0, 0.3) !important;
+}
+
+/* Style pour les Modal overlay - semi-transparent pour voir l'image de fond */
+.mantine-Modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* Force black text in select inputs */
+.transparent-select-input,
+.transparent-select-input input,
+.transparent-select-input [data-placeholder],
+.transparent-select-input [data-value] {
+  color: #212529 !important;
+}
+
+.transparent-select-input::placeholder {
+  color: #868e96 !important;
+}
+
+/* Style global pour les titres et textes - noir au lieu de blanc */
+#root h1,
+#root h2,
+#root h3,
+#root h4,
+#root h5,
+#root h6 {
+  color: #212529 !important;
+}
+
+/* Style pour les textes dimmed - noir/gris foncé au lieu de blanc */
+#root [data-mantine-color-scheme] .mantine-Text-root[class*="dimmed"] {
+  color: #495057 !important;
+}
+
+[dir="rtl"] {
+  direction: rtl;
+}
+
+/* Fade-in animation */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Listing card responsive styles */
+.listing-card-responsive {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+@media (max-width: 576px) {
+  .listing-card-responsive {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .listing-card-responsive {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 769px) {
+  .listing-card-responsive {
+    max-width: 100%;
+  }
+}
+
+/* Hero image responsive */
+.hero-image-container {
+  width: 100%;
+  min-height: 600px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .hero-image-container {
+    min-height: 500px;
+  }
+}
+
+@media (min-width: 769px) {
+  .hero-image-container {
+    min-height: 600px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hero-image-container {
+    min-height: 700px;
+  }
+}
+
+.hero-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Search sidebar responsive */
+.search-sidebar {
+  position: relative;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.90) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@media (min-width: 768px) {
+  .search-sidebar {
+    position: sticky;
+    top: 20px;
+  }
+}
+
+/* Listing carousel responsive */
+.listing-carousel {
+  width: 100%;
+  height: 500px;
+}
+
+@media (max-width: 576px) {
+  .listing-carousel {
+    height: 300px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .listing-carousel {
+    height: 400px;
+  }
+}
+
+/* Listing image responsive */
+.listing-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+@media (max-width: 576px) {
+  .listing-image {
+    height: 300px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .listing-image {
+    height: 400px;
+  }
+}
+
+/* General mobile optimizations */
+@media (max-width: 576px) {
+  body {
+    font-size: 14px;
+  }
+
+  button,
+  a {
+    min-height: 44px; /* Touch target size */
+  }
+
+  .mantine-Container-root {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+/* Category icon responsive */
+.category-icon-item {
+  min-width: 80px;
+  max-width: 120px;
+}
+
+@media (max-width: 576px) {
+  .category-icon-item {
+    min-width: 70px;
+    max-width: 100px;
+  }
+
+  .category-icon-box {
+    width: 60px;
+    height: 60px;
+  }
+
+  .category-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .category-icon-box {
+    width: 70px;
+    height: 70px;
+  }
+
+  .category-icon {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (min-width: 769px) {
+  .category-icon-box {
+    width: 80px;
+    height: 80px;
+  }
+
+  .category-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Footer responsive */
+@media (max-width: 576px) {
+  .footer-logo-section {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .footer-content-section {
+    width: 100%;
+  }
+
+  .footer-logo {
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  .footer-description {
+    text-align: center;
+  }
+}
+
+@media (min-width: 577px) {
+  .footer-logo-section {
+    flex: 0 0 250px;
+    max-width: 250px;
+  }
+
+  .footer-content-section {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}

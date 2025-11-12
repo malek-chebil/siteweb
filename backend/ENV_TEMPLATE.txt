@@ -1,0 +1,44 @@
+# Copy this content to your .env file in the backend folder
+# Replace ALL the placeholder values with your actual Supabase credentials
+
+# ============================================
+# DATABASE CONNECTION
+# ============================================
+# Format: postgresql+asyncpg://user:password@host:port/database
+# Get password from: Supabase Dashboard > Settings > Database > Database password
+# Get project ref from: Your Supabase URL (the part before .supabase.co)
+DATABASE_URL=postgresql+asyncpg://postgres:YOUR_PASSWORD_HERE@db.YOUR_PROJECT_REF.supabase.co:5432/postgres
+
+# ============================================
+# SUPABASE CONFIGURATION
+# ============================================
+# Get these from: Supabase Dashboard > Settings > API
+
+# Your Supabase project URL (e.g., https://abcdefghijklmnop.supabase.co)
+SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+
+# Anon/Public key (from Settings > API > anon key)
+SUPABASE_ANON_KEY=your-anon-key-here
+
+# JWT Secret (from Settings > API > JWT Secret - click "Reveal")
+SUPABASE_JWT_SECRET=your-jwt-secret-here
+
+# ============================================
+# CORS CONFIGURATION
+# ============================================
+# Frontend URLs that can access the API (comma-separated)
+CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+
+# ============================================
+# APP CONFIGURATION
+# ============================================
+DEBUG=True
+API_V1_PREFIX=/api/v1
+
+# ============================================
+# RATE LIMITING (optional)
+# ============================================
+RATE_LIMIT_ENABLED=True
+RATE_LIMIT_REQUESTS=100
+RATE_LIMIT_WINDOW=60
+

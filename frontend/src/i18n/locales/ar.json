@@ -1,0 +1,84 @@
+{
+  "common": {
+    "search": "بحث",
+    "filter": "تصفية",
+    "clear": "مسح",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "close": "إغلاق",
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "confirm": "تأكيد"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "التسجيل",
+    "logout": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور?",
+    "alreadyHaveAccount": "لديك حساب بالفعل?",
+    "noAccount": "ليس لديك حساب?",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
+    "logoutSuccess": "تم تسجيل الخروج بنجاح",
+    "continueWithGoogle": "المتابعة مع Google",
+    "or": "أو"
+  },
+  "listing": {
+    "title": "العنوان",
+    "description": "الوصف",
+    "city": "المدينة",
+    "price": "السعر",
+    "phone": "الهاتف",
+    "whatsapp": "واتساب",
+    "category": "الفئة",
+    "photos": "الصور",
+    "addListing": "إضافة إعلان",
+    "editListing": "تعديل الإعلان",
+    "myListings": "إعلاناتي",
+    "noListings": "لا توجد إعلانات",
+    "contact": "اتصل",
+    "call": "اتصال",
+    "message": "رسالة",
+    "favorite": "المفضلة",
+    "report": "الإبلاغ",
+    "createdAt": "تم الإنشاء في",
+    "status": {
+      "pending": "قيد الانتظار",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض"
+    }
+  },
+  "filters": {
+    "city": "المدينة",
+    "category": "الفئة",
+    "priceRange": "نطاق السعر",
+    "minPrice": "الحد الأدنى للسعر",
+    "maxPrice": "الحد الأقصى للسعر",
+    "searchPlaceholder": "البحث حسب العنوان أو الوصف..."
+  },
+  "admin": {
+    "dashboard": "لوحة التحكم",
+    "pendingListings": "الإعلانات المعلقة",
+    "approvedListings": "الإعلانات الموافق عليها",
+    "rejectedListings": "الإعلانات المرفوضة",
+    "users": "المستخدمون",
+    "approve": "الموافقة",
+    "reject": "الرفض",
+    "reason": "السبب",
+    "moderationLogs": "سجلات المراجعة",
+    "stats": "الإحصائيات"
+  },
+  "home": {
+    "title": "تدليك في المنزل والمزيد",
+    "subtitle": "ابحث عن أفضل الخدمات بالقرب منك",
+    "browseCategories": "تصفح الفئات",
+    "featuredListings": "الإعلانات المميزة"
+  }
+}
+

@@ -1,0 +1,335 @@
+✅ Roadmap (Point-by-Point Execution Plan)
+✅ PHASE 1 — Foundation Setup
+
+Create a GitHub organization (optional but clean)
+
+Create 3 repositories:
+
+rental-website (public app)
+
+rental-admin (admin dashboard)
+
+rental-api (backend)
+
+Create a Supabase project
+
+Enable Auth
+
+Enable Storage
+
+Copy environment variables
+
+Plan DB schema (Users, Listings, Booking, Media, Reviews, ModerationLogs)
+
+✅ PHASE 2 — Backend (FastAPI) Setup
+
+Initialize FastAPI project (uvicorn, SQLAlchemy, Pydantic)
+
+Configure environment variables
+
+Connect to Supabase Postgres
+
+Create migrations (Alembic)
+
+Implement:
+
+/auth/me
+
+/listings CRUD
+
+/media/upload
+
+/bookings
+
+Add JWT middleware (verify via Supabase)
+
+Add CORS rules (allow frontend URLs)
+
+✅ PHASE 3 — Database Schema
+
+Create tables:
+
+Users
+
+Listings
+
+ListingMedia
+
+Bookings
+
+Reviews
+
+ModerationLogs
+
+Add indexes:
+
+city
+
+category
+
+price
+
+fulltext on title/description
+
+✅ PHASE 4 — Public Website (React)
+
+Scaffold with Vite + Mantine
+
+Implement pages:
+
+Home + Search
+
+Listing detail
+
+Login/Register
+
+Post a listing
+
+User dashboard (my ads, bookings)
+
+Integrate Supabase Auth
+
+Integrate image upload to Supabase Storage
+
+Validate forms
+
+Add map/location picker (optional)
+
+✅ PHASE 5 — Admin Dashboard (React)
+
+Scaffold with Vite + Mantine
+
+Protect routes by role
+
+Implement pages:
+
+Pending Approval Queue
+
+Listings Manager (edit/delete/archive)
+
+User Manager (ban/verify)
+
+Reports
+
+Add moderation workflow:
+
+Approve
+
+Reject with reason
+
+Flag violation
+
+✅ PHASE 6 — Category Specialization
+
+Add custom fields for Massage à domicile:
+
+massage_type (array)
+
+duration
+
+gender_preference
+
+at_home (boolean)
+
+availability_hours
+
+Add related filters to search
+
+✅ PHASE 7 — Photos & Media
+
+Enforce:
+
+file type whitelist
+
+size limit
+
+Add compression (optional)
+
+Mark primary photo
+
+✅ PHASE 8 — Bookings System
+
+Create booking table
+
+Create booking API
+
+Admin can see booking history
+
+User dashboard shows upcoming bookings
+
+(Optional) add calendar availability
+
+✅ PHASE 9 — Notifications
+
+Integrate email (Resend / SendGrid)
+
+Send on:
+
+new booking request
+
+admin approval
+
+cancellation
+
+✅ PHASE 10 — Moderation
+
+Create moderation logs
+
+Admin can:
+
+reject photos
+
+delete inappropriate ads
+
+suspend user
+
+Add report button on frontend
+
+✅ PHASE 11 — SEO & Performance
+
+Add:
+
+Meta tags per listing
+
+Clean URL slugs
+
+Add caching layer (Cloudflare or Redis optional)
+
+Image lazy loading
+
+✅ PHASE 12 — Deployment
+
+Deploy website → Vercel
+
+Deploy admin → Vercel
+
+Deploy backend → Render (free tier)
+
+Connect environments to Supabase
+
+Add domain + SSL
+
+✅ PHASE 13 — Monetization (Later)
+
+Featured ads
+
+Highlight badges
+
+Ad boosting subscription
+
+✅ PHASE 14 — Analytics
+
+Track:
+
+page views
+
+conversion rate
+
+photo clickthrough
+
+Visualize in admin using Chart.js
+
+🧠 Bonus Suggestions
+
+Add WhatsApp contact button (huge conversion lift)
+
+Add verification badges for trust
+
+Filter by same-day availability
+
+🧩 Deliverables Checklist (MVP)
+
+✅ User Auth (Supabase)
+
+✅ Publish listings after admin approval
+
+✅ Search by city, category, price
+
+✅ Upload photos
+
+✅ Booking requests
+
+✅ Moderation queue
+
+✅ Admin analytics
+
+✅ Reviews
+
+🚀 Ready-to-Paste Cursor Prompt (Improved)
+
+Copy/paste this ENTIRE block into Cursor ↓↓↓
+
+You are helping build a two-application platform:
+
+1) `rental-website` - public-facing React application where users can:
+- create accounts (via Supabase Auth)
+- submit listings (Massage à domicile focus)
+- search listings by city, category, price, massage type, duration, gender preference
+- upload photos to Supabase Storage
+- request bookings
+- see their own ads and bookings
+
+2) `rental-admin` - admin React dashboard where admins can:
+- review pending listings
+- approve/reject with reason
+- modify any listing
+- suspend/verify users
+- view analytics (Chart.js)
+- see moderation logs
+- track booking volume
+
+Backend:
+- FastAPI + Python
+- Postgres database hosted on Supabase
+- SQLAlchemy + Alembic for migrations
+- Pydantic schemas for validation
+- JWT auth (verify Supabase tokens)
+- S3-compatible storage operations (Supabase Storage)
+
+Database tables:
+- users (role: user/admin)
+- listings (title, description, city, price, category, massage_type[], duration_min, gender_preference, at_home boolean, status: draft/pending/published/rejected)
+- listing_media (url, is_primary)
+- bookings (listing_id, user_id, start_date, status)
+- moderation_logs
+- reviews (rating, comment)
+
+Backend Requirements:
+- GET /listings
+- GET /listings/{id}
+- POST /listings (draft)
+- PUT /listings/{id}
+- POST /listings/{id}/submit (set status pending)
+- POST /admin/listings/{id}/approve
+- POST /admin/listings/{id}/reject
+- POST /media/upload -> returns Supabase Storage URL
+- POST /bookings
+- GET /me
+
+Admin Dashboard UI:
+- moderation queue table
+- listing editor
+- image manager
+- user manager
+- analytics with Chart.js
+
+Public Site UI:
+- home page with search filters
+- listing detail page with photos
+- contact button (e.g., WhatsApp)
+- booking request modal
+- user dashboard (my listings, my bookings)
+
+Generate:
+- File structure for each app
+- Backend scaffold with FastAPI
+- Example .env template
+- Supabase Storage upload utility
+- Listing form components (Mantine)
+- Moderation queue table (Mantine DataTable)
+- Migration SQL
+- Pagination for GET /listings
+- Slug generation for SEO URLs
+- Basic validation rules
+
+Keep code clean, secure, and ready to run.
