@@ -28,15 +28,18 @@ Ce guide utilise vos valeurs réelles pour configurer Vercel et Render.
 - **Environments**: ✅ Production, ✅ Preview, ✅ Development
 - **Cliquez sur "Add"**
 
-#### Variable 3: VITE_API_URL
+#### Variable 3: VITE_API_URL ⚠️ **IMPORTANT - À METTRE À JOUR**
 
 - **Key**: `VITE_API_URL`
 - **Value**: `https://votre-backend.onrender.com/api/v1`
   - ⚠️ **Remplacez `votre-backend.onrender.com` par l'URL de votre backend Render**
-  - ⚠️ **Pour l'instant, utilisez temporairement**: `http://localhost:8000/api/v1`
-  - ⚠️ **Une fois le backend déployé sur Render, mettez à jour avec l'URL Render**
+  - ⚠️ **Exemple**: `https://carthage-wellness-backend.onrender.com/api/v1`
+  - ⚠️ **NE PAS utiliser `http://localhost:8000/api/v1` en production!**
+  - ⚠️ **Cela causera des erreurs CORS et des erreurs de réseau**
 - **Environments**: ✅ Production, ✅ Preview, ✅ Development
-- **Cliquez sur "Add"**
+- **Cliquez sur "Add"** ou **"Save"** si elle existe déjà
+
+⚠️ **IMPORTANT**: Si vous voyez des erreurs `localhost:8000` dans la console, c'est que `VITE_API_URL` n'a pas été mis à jour avec l'URL du backend Render!
 
 ### Redéployer le Frontend
 
