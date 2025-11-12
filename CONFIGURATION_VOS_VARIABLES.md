@@ -119,8 +119,19 @@ vercel --prod
 ### Le Backend Redéploie Automatiquement
 
 1. **Après avoir ajouté chaque variable**, Render redéploie automatiquement
-2. **Attendez que le déploiement soit terminé** (vous verrez "Live" en vert)
-3. **Notez l'URL du backend** (ex: `https://carthage-wellness-backend.onrender.com`)
+2. **Vous verrez**: "Deploying..." dans le statut du service
+3. **Attendez que le déploiement soit terminé** (vous verrez "Live" en vert)
+4. **Vérifiez les logs** pour confirmer qu'il n'y a pas d'erreurs
+5. **Notez l'URL du backend** (ex: `https://carthage-wellness-backend.onrender.com`)
+
+### Si le Redéploiement Automatique Ne Se Déclenche Pas
+
+1. **Cliquez sur "Manual Deploy"** (en haut à droite)
+2. **Sélectionnez "Clear build cache & deploy"**
+3. **Cliquez sur "Deploy"**
+4. **Attendez que le déploiement soit terminé**
+
+📚 **Guide détaillé**: Voir `REDEPLOY_RENDER.md`
 
 ---
 
