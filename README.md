@@ -1,6 +1,14 @@
-# Classifieds Web Platform
+# 🧘 Carthage Wellness Spa
 
-A full-stack classifieds web platform similar to afribaba.com, focused on "Massage à domicile et Plus" category.
+Plateforme complète de petites annonces dédiée aux services de bien-être et massage en Tunisie.
+
+## 🌟 Description
+
+Carthage Wellness Spa est une plateforme web full-stack permettant aux utilisateurs de publier, rechercher et gérer des annonces de services de bien-être, massage, spa, et esthétique. La plateforme inclut un système d'authentification, de gestion d'images, de modération admin, et de recherche avancée.
+
+**🌐 Site Web**: [En cours de déploiement](https://vercel.com)
+**📱 Responsive**: Optimisé pour mobile et desktop
+**🌍 Langues**: Français (par défaut), Arabe
 
 ## 🚀 Features
 
