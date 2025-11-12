@@ -40,9 +40,29 @@ Ce guide utilise vos valeurs réelles pour configurer Vercel et Render.
 
 ### Redéployer le Frontend
 
-1. **Allez dans "Deployments"**
-2. **Cliquez sur les trois points** (⋯) → **"Redeploy"**
-3. **Attendez que le déploiement soit terminé**
+#### Méthode 1: Via le Dashboard (Recommandé)
+
+1. **Allez dans "Deployments"** (dans le menu de gauche)
+2. **Trouvez le dernier déploiement** (en haut de la liste)
+3. **Cliquez sur les trois points** (⋯) à côté du déploiement
+4. **Cliquez sur "Redeploy"**
+5. **Sélectionnez "Use existing Build Cache"** (recommandé) ou **"Redeploy"**
+6. **Attendez que le déploiement soit terminé** (vous verrez "Ready" en vert)
+
+#### Méthode 2: Via Vercel CLI
+
+```bash
+cd "C:\Users\Malek\Desktop\site Web\frontend"
+vercel --prod
+```
+
+#### Vérification
+
+1. **Visitez**: https://frontend-mocha-seven-19.vercel.app/
+2. **Ouvrez la console** (F12)
+3. **Vérifiez qu'il n'y a pas d'erreurs**
+
+📚 **Guide détaillé**: Voir `REDEPLOY_VERCEL.md`
 
 ---
 
