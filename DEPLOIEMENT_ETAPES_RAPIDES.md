@@ -16,7 +16,7 @@ Les fichiers nécessaires ont été créés:
 
 ### Commande Rapide:
 ```bash
-npm install -g vercel
+cd ;..
 cd frontend
 vercel login
 vercel
