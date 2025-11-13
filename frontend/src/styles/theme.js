@@ -3,17 +3,44 @@ import { createTheme } from '@mantine/core'
 export const theme = createTheme({
   primaryColor: 'yellow',
   colors: {
+    // Warm, earthy color palette matching background image
     yellow: [
-      '#fffbf0',
-      '#fff8e1',
-      '#ffecb3',
-      '#ffe082',
-      '#ffd54f',
-      '#FFC300', // Primary
-      '#ffb300',
-      '#ffa000',
-      '#ff8f00',
-      '#ff6f00',
+      '#fff9e6',
+      '#fff3cc',
+      '#ffe8a3',
+      '#ffd966',
+      '#ffcc33',
+      '#FFB84D', // Primary - warmer, more earthy
+      '#ffa733',
+      '#ff9919',
+      '#e67e00',
+      '#cc6600',
+    ],
+    // Earthy accent colors
+    orange: [
+      '#fff4e6',
+      '#ffe8cc',
+      '#ffd1a3',
+      '#ffba66',
+      '#ffa333',
+      '#ff8c00', // Warm orange accent
+      '#e67e00',
+      '#cc7000',
+      '#b36200',
+      '#995400',
+    ],
+    // Warm brown/terracotta
+    brown: [
+      '#f5ebe0',
+      '#ead6c7',
+      '#d4b29a',
+      '#be8e6d',
+      '#a86a40',
+      '#8B4513', // Warm brown
+      '#7a3d10',
+      '#69350d',
+      '#582d0a',
+      '#472507',
     ],
   },
   fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
@@ -36,7 +63,7 @@ export const theme = createTheme({
       h6: { fontSize: '1rem', lineHeight: '1.5' },
     },
   },
-  defaultRadius: 'md',
+  defaultRadius: 'lg',
   spacing: {
     xs: '0.5rem',
     sm: '0.75rem',
@@ -45,14 +72,14 @@ export const theme = createTheme({
     xl: '2rem',
   },
   shadows: {
-    xs: '0 1px 3px rgba(0, 0, 0, 0.05)',
-    sm: '0 2px 8px rgba(0, 0, 0, 0.08)',
-    md: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    lg: '0 10px 20px rgba(0, 0, 0, 0.12)',
-    xl: '0 20px 30px rgba(0, 0, 0, 0.15)',
+    xs: '0 2px 4px rgba(139, 69, 19, 0.08)',
+    sm: '0 4px 8px rgba(139, 69, 19, 0.12)',
+    md: '0 8px 16px rgba(139, 69, 19, 0.15)',
+    lg: '0 16px 32px rgba(139, 69, 19, 0.18)',
+    xl: '0 24px 48px rgba(139, 69, 19, 0.20)',
   },
   other: {
-    transition: 'all 0.2s ease',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   },
   breakpoints: {
     xs: '36em',   // 576px

@@ -8,7 +8,6 @@ import { IconStar, IconEye, IconList, IconX, IconGrid3x3, IconList as IconListMo
 import api from '../lib/api'
 import ListingCard from '../components/ListingCard'
 import ListingCardList from '../components/ListingCardList'
-import FiltersBar from '../components/FiltersBar'
 import SearchSidebar from '../components/SearchSidebar'
 
 const SearchPage = () => {
@@ -315,24 +314,19 @@ const SearchPage = () => {
   }
 
   return (
-    <Container size="xl" py={{ base: 'md', sm: 'xl' }}>
+    <Container size="xl" pt={{ base: '2xl', sm: '4xl', md: '5xl' }} pb={{ base: 'md', sm: 'xl' }} px={{ base: 'md', sm: 'xl' }}>
       <Stack gap={{ base: 'md', sm: 'xl' }}>
-        {/* Search Bar */}
-        <FiltersBar 
-          filters={filters} 
-          onFiltersChange={handleFiltersChange}
-          onApply={handleApplyFilters}
-        />
-
         {/* Results Section */}
         <Grid gutter={{ base: 'xs', sm: 'md' }}>
           {/* Sidebar Filters */}
           <Grid.Col span={{ base: 12, md: 3 }} order={{ base: 2, md: 1 }}>
-            <SearchSidebar 
-              filters={filters}
-              onFiltersChange={handleFiltersChange}
-              onApply={handleApplyFilters}
-            />
+            <Box style={{ position: 'sticky', top: '100px', alignSelf: 'flex-start' }}>
+              <SearchSidebar 
+                filters={filters}
+                onFiltersChange={handleFiltersChange}
+                onApply={handleApplyFilters}
+              />
+            </Box>
           </Grid.Col>
 
           {/* Results Content */}

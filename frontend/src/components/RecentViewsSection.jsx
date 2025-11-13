@@ -14,7 +14,6 @@ import {
 } from '@mantine/core'
 import { useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
-import { IconClock } from '@tabler/icons-react'
 import api from '../lib/api'
 import { getHistory } from '../utils/navigationHistory'
 import { getCategoryIcon } from '../utils/categoryIcons'
@@ -77,15 +76,10 @@ const RecentViewsSection = () => {
   const recentListings = listingsData.items.slice(0, 4) // Maximum 4 annonces
 
   return (
-    <Stack gap="md" mt="xl">
-      <Group gap="xs">
-        <IconClock size={24} color="var(--mantine-color-yellow-6)" />
-        <Title order={2} size="h3" style={{ 
-          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-        }}>
-          Annonces récemment consultées
-        </Title>
-      </Group>
+    <Stack gap="md">
+      <Title order={3}>
+        Annonces récemment consultées
+      </Title>
       
       {isLoading ? (
         <Center py="xl">
@@ -115,7 +109,7 @@ const RecentViewsSection = () => {
                   cursor: 'pointer',
                   transition: 'transform 0.2s, box-shadow 0.2s',
                 }}
-                onClick={() => navigate(`/listings/${listing.id}`)}
+                onClick={() => navigate(`/listing/${listing.id}`)}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-4px)'
                   e.currentTarget.style.boxShadow = 'var(--mantine-shadow-md)'

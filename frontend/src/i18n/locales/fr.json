@@ -179,7 +179,8 @@
     "createListingDescription": "Vous proposez des services ? Créez votre annonce maintenant !",
     "createListingButton": "Créer une annonce",
     "loginButton": "Se connecter",
-    "copyright": "© {year} Carthage Wellness Spa. Tous droits réservés.",
+    "copyright": "© {{year}} Carthage Wellness Spa. Tous droits réservés.",
+    "copyrightText": "Carthage Wellness Spa. Tous droits réservés.",
     "conditions": "Conditions",
     "privacy": "Confidentialité",
     "description": "Trouvez les meilleures annonces de massage et bien-être en Tunisie."

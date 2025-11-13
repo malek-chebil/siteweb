@@ -22,7 +22,7 @@ body {
   min-height: 100vh;
 }
 
-/* Overlay pour améliorer la lisibilité du contenu */
+/* Overlay pour améliorer la lisibilité du contenu - warmer tone */
 body::before {
   content: '';
   position: fixed;
@@ -30,7 +30,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.20);
+  background: linear-gradient(135deg, rgba(255, 248, 240, 0.25) 0%, rgba(255, 240, 230, 0.20) 100%);
   z-index: -1;
   pointer-events: none;
 }
@@ -41,38 +41,43 @@ body::before {
   z-index: 1;
 }
 
-/* Style pour les Paper/Card components - fond plus opaque pour texte noir */
+/* Style pour les Paper/Card components - elegant glassmorphism with warm tones */
 .mantine-Paper-root:not(.hero-image-container):not(.listing-card):not(.listing-card-compact):not(.listing-card-responsive):not(.mantine-Modal-content):not(.mantine-Drawer-content) {
-  background-color: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border: 2px solid rgba(255, 195, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(255, 252, 248, 0.92) 0%, rgba(255, 248, 240, 0.88) 100%) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 184, 77, 0.25) !important;
+  box-shadow: 0 8px 32px rgba(139, 69, 19, 0.12), 0 2px 8px rgba(139, 69, 19, 0.08) !important;
 }
 
-/* Cartes de listings - fond plus opaque pour texte noir */
+/* Cartes de listings - premium glassmorphism design */
 .listing-card,
 .listing-card-compact,
 .listing-card-responsive {
-  background-color: rgba(255, 255, 255, 0.90) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border: 2px solid rgba(255, 195, 0, 0.4) !important;
+  background: linear-gradient(135deg, rgba(255, 253, 250, 0.95) 0%, rgba(255, 250, 245, 0.92) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 184, 77, 0.30) !important;
+  box-shadow: 0 12px 40px rgba(139, 69, 19, 0.15), 0 4px 12px rgba(139, 69, 19, 0.10) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* Style pour les Drawer - fond plus opaque pour texte noir */
+/* Style pour les Drawer - elegant glassmorphism */
 .mantine-Drawer-content {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 2px solid rgba(255, 195, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(255, 252, 248, 0.98) 0%, rgba(255, 248, 240, 0.96) 100%) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 184, 77, 0.25) !important;
+  box-shadow: -4px 0 32px rgba(139, 69, 19, 0.15) !important;
 }
 
-/* Style pour les Modal - fond plus opaque pour texte noir */
+/* Style pour les Modal - elegant glassmorphism */
 .mantine-Modal-content {
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 2px solid rgba(255, 195, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(255, 252, 248, 0.98) 0%, rgba(255, 248, 240, 0.96) 100%) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 184, 77, 0.25) !important;
+  box-shadow: 0 24px 64px rgba(139, 69, 19, 0.20), 0 8px 16px rgba(139, 69, 19, 0.12) !important;
 }
 
 /* Style pour les Modal overlay - semi-transparent pour voir l'image de fond */
@@ -129,10 +134,18 @@ body::before {
   }
 }
 
-/* Listing card responsive styles */
+/* Listing card responsive styles - enhanced hover effects */
 .listing-card-responsive {
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
+}
+
+.listing-card-responsive:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.listing-card-responsive:hover .listing-card-image {
+  transform: scale(1.08);
 }
 
 @media (max-width: 576px) {
@@ -313,36 +326,69 @@ body::before {
   }
 }
 
-/* Footer responsive */
-@media (max-width: 576px) {
-  .footer-logo-section {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  .footer-content-section {
-    width: 100%;
-  }
-
-  .footer-logo {
-    max-width: 200px;
-    margin: 0 auto;
-  }
-
-  .footer-description {
-    text-align: center;
-  }
+/* Footer responsive - Standard footer layout - Full width with minimal side margins */
+.app-footer {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  clear: both !important;
 }
 
-@media (min-width: 577px) {
-  .footer-logo-section {
-    flex: 0 0 250px;
-    max-width: 250px;
+/* Navbar - minimal side margins */
+.mantine-AppShell-header {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Ensure body and html don't add margins */
+body, html {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Ensure root doesn't limit footer width */
+#root {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+
+@media (max-width: 768px) {
+  .app-footer {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+  
+  .mantine-AppShell-header {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+  
+  .app-footer .mantine-Group-root {
+    flex-direction: column !important;
+  }
+  
+  .app-footer .mantine-Group-root > div:first-child {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    margin-bottom: 2rem;
   }
 
-  .footer-content-section {
-    flex: 1;
-    min-width: 0;
+  .app-footer .mantine-Group-root > div:last-child {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
   }
 }
 
@@ -351,21 +397,24 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - warm tones */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(139, 69, 19, 0.05);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+  background: linear-gradient(135deg, rgba(255, 184, 77, 0.6) 0%, rgba(255, 153, 25, 0.5) 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 252, 248, 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, rgba(255, 184, 77, 0.8) 0%, rgba(255, 153, 25, 0.7) 100%);
 }
+

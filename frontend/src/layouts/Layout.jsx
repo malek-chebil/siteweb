@@ -259,99 +259,110 @@ export const Layout = () => {
   )
 
   return (
-    <AppShell
-      padding={{ base: 'xs', sm: 'md', lg: 'lg' }}
-      header={{ height: { base: 60, sm: 80 } }}
-    >
-      <AppShell.Header
-        p={{ base: 'xs', sm: 'md' }}
-        style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          borderBottom: '1px solid rgba(233, 236, 239, 0.5)',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
-        }}
+    <Box style={{ width: '100%', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <AppShell
+        padding={0}
+        header={{ height: { base: 60, sm: 80 } }}
+        style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
       >
-        <Group justify="space-between" style={{ height: '100%', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
-          <Group gap={{ base: 'xs', sm: 'md' }}>
-            <Burger
-              opened={drawerOpened}
-              onClick={toggleDrawer}
-              hiddenFrom="sm"
-              size="sm"
-            />
-            <ActionIcon
-              variant="subtle"
-              color="yellow"
-              size={isMobile ? "md" : "lg"}
-              onClick={() => navigate('/')}
-              style={{ cursor: 'pointer' }}
-            >
-              <IconHome size={isMobile ? 20 : 24} />
-            </ActionIcon>
-            <Text
-              size="xl"
-              fw={700}
-              hiddenFrom="sm"
-              style={{ 
-                cursor: 'pointer',
-                letterSpacing: '-0.5px',
-                background: 'linear-gradient(135deg, #FFC300 0%, #ffb300 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                fontSize: '1rem',
-              }}
-              onClick={() => navigate('/')}
-            >
-              {t('home.title')}
-            </Text>
-            <Text
-              size="xl"
-              fw={700}
-              visibleFrom="sm"
-              style={{ 
-                cursor: 'pointer',
-                letterSpacing: '-0.5px',
-                background: 'linear-gradient(135deg, #FFC300 0%, #ffb300 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-              onClick={() => navigate('/')}
-            >
-              {t('home.title')}
-            </Text>
+        <AppShell.Header
+          p={0}
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            borderBottom: '1px solid rgba(233, 236, 239, 0.5)',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+            paddingLeft: '4px',
+            paddingRight: '4px',
+            paddingTop: '8px',
+            paddingBottom: '8px',
+          }}
+        >
+          <Group justify="space-between" style={{ height: '100%', width: '100%' }}>
+            <Group gap={{ base: 'xs', sm: 'md' }}>
+              <Burger
+                opened={drawerOpened}
+                onClick={toggleDrawer}
+                hiddenFrom="sm"
+                size="sm"
+              />
+              <ActionIcon
+                variant="subtle"
+                color="yellow"
+                size={isMobile ? "md" : "lg"}
+                onClick={() => navigate('/')}
+                style={{ cursor: 'pointer' }}
+              >
+                <IconHome size={isMobile ? 20 : 24} />
+              </ActionIcon>
+              <Text
+                size="xl"
+                fw={700}
+                hiddenFrom="sm"
+                style={{ 
+                  cursor: 'pointer',
+                  letterSpacing: '-0.5px',
+                  background: 'linear-gradient(135deg, #FFC300 0%, #ffb300 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  fontSize: '1rem',
+                }}
+                onClick={() => navigate('/')}
+              >
+                {t('home.title')}
+              </Text>
+              <Text
+                size="xl"
+                fw={700}
+                visibleFrom="sm"
+                style={{ 
+                  cursor: 'pointer',
+                  letterSpacing: '-0.5px',
+                  background: 'linear-gradient(135deg, #FFC300 0%, #ffb300 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+                onClick={() => navigate('/')}
+              >
+                {t('home.title')}
+              </Text>
+            </Group>
+            {desktopMenuItems}
           </Group>
-          {desktopMenuItems}
-        </Group>
-      </AppShell.Header>
+        </AppShell.Header>
 
-      <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        title={t('home.title')}
-        padding="md"
-        size="xs"
-        zIndex={1000000}
-      >
-        {mobileMenuItems}
-      </Drawer>
+        <Drawer
+          opened={drawerOpened}
+          onClose={closeDrawer}
+          title={t('home.title')}
+          padding="md"
+          size="xs"
+          zIndex={1000000}
+        >
+          {mobileMenuItems}
+        </Drawer>
 
-      <AppShell.Main
-        style={{
-          backgroundColor: 'transparent',
-          minHeight: 'calc(100vh - 80px)',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <Outlet />
-        </div>
-        <Footer />
-      </AppShell.Main>
-    </AppShell>
+        <AppShell.Main
+          style={{
+            backgroundColor: 'transparent',
+            minHeight: 'calc(100vh - 80px)',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 0,
+            paddingTop: '56px',
+            paddingBottom: '24px',
+            flex: 1,
+          }}
+        >
+          <div style={{ flex: 1, width: '100%' }}>
+            <Outlet />
+          </div>
+        </AppShell.Main>
+      </AppShell>
+      <Footer />
+    </Box>
   )
 }

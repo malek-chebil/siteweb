@@ -157,7 +157,7 @@ const ListingEditorPage = () => {
 
   if (isEdit && isLoading) {
     return (
-      <Container>
+      <Container size="md" py="xl" mt="md">
         <Text>{t('common.loading')}</Text>
       </Container>
     )
@@ -166,7 +166,7 @@ const ListingEditorPage = () => {
   // Check if listing is approved and user is not admin
   if (isEdit && listing && listing.status === 'approved' && !listing.user?.is_admin) {
     return (
-      <Container size="md">
+      <Container size="md" py="xl" mt="md">
         <Paper p="xl" radius="md" withBorder>
           <Stack align="center" gap="md">
             <Text size="xl" fw={600} c="yellow.6">
@@ -186,7 +186,7 @@ const ListingEditorPage = () => {
   }
 
   return (
-    <Container size="md">
+    <Container size="md" pt="2xl" pb="lg">
       <Paper p="md" radius="md" withBorder>
         <Title order={2} mb="xl">
           {isEdit ? t('listing.editListing') : t('listing.addListing')}

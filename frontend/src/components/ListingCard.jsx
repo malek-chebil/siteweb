@@ -24,8 +24,7 @@ const ListingCard = ({ listing, variant = 'default' }) => {
   const titleSize = isCompact ? 'md' : 'md'
   const titleMinHeight = isCompact ? '2.2rem' : '2.2rem'
   const titleMaxHeight = isCompact ? '2.2rem' : '2.2rem'
-  const descriptionMinHeight = isCompact ? '1.6rem' : '1.6rem'
-  const descriptionMaxHeight = isCompact ? '1.6rem' : '1.6rem'
+  // Removed fixed min/max height for description to allow proper ellipsis
   const padding = isCompact ? 'sm' : 'md'
   const gap = isCompact ? '6px' : 'xs'
   const badgesGap = isCompact ? '6px' : '6px'
@@ -96,37 +95,48 @@ const ListingCard = ({ listing, variant = 'default' }) => {
     <Card
       shadow="sm"
       padding={0}
-      radius="md"
+      radius="lg"
       withBorder
       style={{ 
         height: cardHeight,
-        width: isCompact ? '280px' : '100%',
-        maxWidth: isCompact ? '280px' : '100%',
+        width: isCompact ? '100%' : '100%',
+        maxWidth: isCompact ? '100%' : '100%',
         display: 'flex', 
         flexDirection: 'column',
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        overflow: 'hidden',
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+        transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        overflow: 'visible',
         cursor: 'pointer',
+        position: 'relative',
       }}
       className={`listing-card ${isCompact ? 'listing-card-compact' : 'listing-card-responsive'}`}
       onMouseEnter={(e) => {
         if (window.innerWidth >= 768) {
-          e.currentTarget.style.transform = 'translateY(-4px)'
-          e.currentTarget.style.boxShadow = '0 8px 24px rgba(255, 195, 0, 0.4)'
-          e.currentTarget.style.borderColor = 'rgba(255, 195, 0, 0.6)'
+          e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)'
+          e.currentTarget.style.boxShadow = '0 20px 48px rgba(255, 184, 77, 0.35), 0 8px 16px rgba(139, 69, 19, 0.20)'
+          e.currentTarget.style.borderColor = 'rgba(255, 184, 77, 0.50)'
+          // Add subtle glow effect
+          e.currentTarget.style.filter = 'brightness(1.05)'
         }
       }}
       onMouseLeave={(e) => {
         if (window.innerWidth >= 768) {
-          e.currentTarget.style.transform = 'translateY(0)'
-          e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.2)'
-          e.currentTarget.style.borderColor = 'rgba(255, 195, 0, 0.3)'
+          e.currentTarget.style.transform = 'translateY(0) scale(1)'
+          e.currentTarget.style.filter = 'brightness(1)'
         }
       }}
       onClick={() => navigate(`/listing/${listing.id}`)}
     >
       <Card.Section pos="relative" style={{ height: imageHeight, overflow: 'hidden', flexShrink: 0, position: 'relative' }}>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.05) 100%)',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }} />
         <Image
           src={primaryImage}
           height={imageHeight}
@@ -139,40 +149,64 @@ const ListingCard = ({ listing, variant = 'default' }) => {
             minHeight: imageHeight,
             maxHeight: imageHeight,
             display: 'block',
+            transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+          onMouseEnter={(e) => {
+            if (window.innerWidth >= 768) {
+              e.currentTarget.style.transform = 'scale(1.08)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (window.innerWidth >= 768) {
+              e.currentTarget.style.transform = 'scale(1)'
+            }
           }}
         />
         {listing.is_featured && (
           <Badge
             pos="absolute"
-            top={8}
-            left={8}
+            top={4}
+            left={4}
             color="yellow"
             variant="filled"
             size="md"
             leftSection={<IconStar size={14} fill="currentColor" />}
             style={{
-              backgroundColor: '#ffc107',
+              background: 'linear-gradient(135deg, #FFB84D 0%, #ff9919 100%)',
               fontWeight: 700,
-              boxShadow: '0 2px 8px rgba(255, 195, 0, 0.5)',
+              boxShadow: '0 4px 12px rgba(255, 184, 77, 0.5), 0 2px 4px rgba(139, 69, 19, 0.3)',
               fontSize: '0.7rem',
-              padding: '4px 10px',
-              color: '#000',
-              border: 'none',
-              borderRadius: '6px',
-              letterSpacing: '0.3px',
-              zIndex: 10,
+              padding: '8px 14px',
+              paddingTop: '8px',
+              paddingBottom: '8px',
+              color: '#fff',
+              border: '1.5px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: '8px',
+              letterSpacing: '0.5px',
+              zIndex: 30,
+              textTransform: 'uppercase',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              lineHeight: '1.2',
+              height: 'auto',
+              minHeight: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'visible',
             }}
           >
-            PREMIUM
+            Premium
           </Badge>
         )}
         <Group
           gap={4}
           pos="absolute"
-          top={8}
-          right={8}
+          top={4}
+          right={4}
           style={{
             gap: '4px',
+            zIndex: 25,
           }}
         >
           {isAuthenticated && (
@@ -218,27 +252,25 @@ const ListingCard = ({ listing, variant = 'default' }) => {
       <Stack justify="space-between" style={{ flex: 1, minHeight: 0, overflow: 'hidden', height: `calc(${cardHeight} - ${imageHeight})` }} p={padding} gap={gap}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
           {/* Username first */}
-          {listing.user?.username && (
-            <Text 
-              size="sm" 
-              c="dimmed" 
-              mb={isCompact ? '4px' : '6px'}
-              style={{ 
-                fontSize: isCompact ? '0.75rem' : '0.8rem',
-                color: '#6c757d',
-                fontWeight: 500,
-                lineHeight: '1.2',
-              }}
-            >
-              {listing.user.username}
-            </Text>
-          )}
+          <Text 
+            size="sm" 
+            c="dimmed" 
+            mb={isCompact ? '4px' : '6px'}
+            style={{ 
+              fontSize: isCompact ? '0.75rem' : '0.8rem',
+              color: '#6c757d',
+              fontWeight: 500,
+              lineHeight: '1.2',
+            }}
+          >
+            {listing.user?.username || '--'}
+          </Text>
           
-          {/* Title under username */}
+          {/* Title */}
           <Text 
             fw={700} 
             size={titleSize} 
-            mb={isCompact ? '6px' : '8px'} 
+            mb={isCompact ? '2px' : '4px'} 
             lineClamp={2}
             style={{ 
               minHeight: titleMinHeight,
@@ -256,71 +288,75 @@ const ListingCard = ({ listing, variant = 'default' }) => {
             {listing.title}
           </Text>
           
-          {/* Description under title */}
+          {/* Description - Close to title - Fixed height for alignment */}
           <Text 
             size="sm" 
             c="dimmed" 
-            lineClamp={2} 
-            mb={isCompact ? '8px' : '10px'}
+            lineClamp={3} 
+            mb={isCompact ? '10px' : '12px'}
             style={{ 
-              minHeight: descriptionMinHeight,
-              maxHeight: descriptionMaxHeight,
               overflow: 'hidden',
               display: '-webkit-box',
-              WebkitLineClamp: 2,
+              WebkitLineClamp: 3,
               WebkitBoxOrient: 'vertical',
-              lineHeight: isCompact ? '1rem' : '1.1rem',
+              textOverflow: 'ellipsis',
+              lineHeight: isCompact ? '1.2rem' : '1.3rem',
               fontSize: isCompact ? '0.8rem' : '0.85rem',
-              color: '#495057',
+              color: '#868e96',
               fontWeight: 400,
+              marginTop: '0',
+              paddingTop: '0',
+              minHeight: isCompact ? '3.6rem' : '3.9rem',
+              height: isCompact ? '3.6rem' : '3.9rem',
+              opacity: 0.85,
             }}
           >
             {listing.description || t('listing.noDescription')}
           </Text>
           
-          {/* Other elements - Soft style */}
-          <Stack gap="6px" mb="8px" style={{ width: '100%', flexShrink: 0 }}>
+          {/* Location, Category, Price - Bigger */}
+          <Stack gap={isCompact ? '8px' : '10px'} mb={isCompact ? '10px' : '12px'} style={{ width: '100%', flexShrink: 0 }}>
             {/* Location */}
-            <Group gap={6} style={{ alignItems: 'center', flexWrap: 'nowrap' }}>
-              <Text size="xs" c="dimmed" style={{ fontSize: '0.7rem', color: '#868e96', lineHeight: '1', flexShrink: 0 }}>
+            <Group gap={8} style={{ alignItems: 'center', flexWrap: 'nowrap' }}>
+              <Text size="sm" c="dimmed" style={{ fontSize: '0.85rem', color: '#868e96', lineHeight: '1', flexShrink: 0 }}>
                 📍
               </Text>
-              <Text size="sm" c="dimmed" style={{ fontSize: '0.75rem', color: '#495057', fontWeight: 400, lineHeight: '1.2', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <Text size="sm" c="dimmed" style={{ fontSize: isCompact ? '0.85rem' : '0.9rem', color: '#495057', fontWeight: 500, lineHeight: '1.3', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {listing.city}
               </Text>
             </Group>
             
             {/* Category */}
-            <Group gap={6} style={{ alignItems: 'center', flexWrap: 'nowrap' }}>
+            <Group gap={8} style={{ alignItems: 'center', flexWrap: 'nowrap' }}>
               {(() => {
                 const CategoryIcon = getCategoryIcon(listing.category)
-                return <CategoryIcon size={14} style={{ color: '#868e96', flexShrink: 0 }} />
+                return <CategoryIcon size={isCompact ? 16 : 18} style={{ color: '#868e96', flexShrink: 0 }} />
               })()}
-              <Text size="sm" c="dimmed" style={{ fontSize: '0.75rem', color: '#495057', fontWeight: 400, lineHeight: '1.2', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <Text size="sm" c="dimmed" style={{ fontSize: isCompact ? '0.85rem' : '0.9rem', color: '#495057', fontWeight: 500, lineHeight: '1.3', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {listing.category}
               </Text>
             </Group>
             
             {/* Price */}
             {listing.price && (
-              <Group gap={6} style={{ alignItems: 'center', flexWrap: 'nowrap' }}>
-                <Text size="xs" c="dimmed" style={{ fontSize: '0.7rem', color: '#868e96', lineHeight: '1', flexShrink: 0 }}>
+              <Group gap={8} style={{ alignItems: 'center', flexWrap: 'nowrap' }}>
+                <Text size="sm" c="dimmed" style={{ fontSize: '0.85rem', color: '#868e96', lineHeight: '1', flexShrink: 0 }}>
                   💰
                 </Text>
-                <Text size="sm" fw={600} style={{ fontSize: '0.85rem', color: '#28a745', fontWeight: 600, lineHeight: '1.2' }}>
+                <Text size="sm" fw={600} style={{ fontSize: isCompact ? '0.9rem' : '1rem', color: '#28a745', fontWeight: 600, lineHeight: '1.3' }}>
                   {listing.price} {t('listing.priceCurrency')}
                 </Text>
               </Group>
             )}
           </Stack>
           
-          {/* Date */}
-          <Text size="xs" c="dimmed" style={{ fontSize: '0.65rem', color: '#868e96', fontWeight: 400, marginTop: 'auto', marginBottom: '6px', lineHeight: '1.2' }}>
+          {/* Date - Bigger */}
+          <Text size="sm" c="dimmed" style={{ fontSize: isCompact ? '0.75rem' : '0.8rem', color: '#868e96', fontWeight: 400, marginTop: 'auto', marginBottom: '6px', lineHeight: '1.3' }}>
             {dayjs(listing.created_at).format('DD/MM/YYYY')}
           </Text>
         </div>
 
-        <Group mt="auto" gap="4px" wrap="nowrap" style={{ marginTop: '8px', minHeight: '32px', flexShrink: 0 }}>
+        <Group mt="auto" gap="6px" wrap="nowrap" style={{ marginTop: '12px', minHeight: '36px', flexShrink: 0 }}>
           <Button
             variant="light"
             color="yellow"
@@ -329,17 +365,30 @@ const ListingCard = ({ listing, variant = 'default' }) => {
               e.stopPropagation()
               navigate(`/listing/${listing.id}`)
             }}
-            size="xs"
-            leftSection={<IconEye size={14} />}
+            size="sm"
+            leftSection={<IconEye size={16} />}
             style={{
               fontWeight: 600,
-              fontSize: '0.75rem',
-              padding: '4px 10px',
-              height: '32px',
-              color: '#856404',
-              backgroundColor: '#fff3cd',
-              border: '1px solid #ffc107',
-              borderRadius: '6px',
+              fontSize: '0.8rem',
+              padding: '6px 12px',
+              height: '36px',
+              background: 'linear-gradient(135deg, rgba(255, 184, 77, 0.15) 0%, rgba(255, 153, 25, 0.12) 100%)',
+              color: '#8B4513',
+              border: '1.5px solid rgba(255, 184, 77, 0.40)',
+              borderRadius: '8px',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 184, 77, 0.25) 0%, rgba(255, 153, 25, 0.20) 100%)'
+              e.currentTarget.style.borderColor = 'rgba(255, 184, 77, 0.60)'
+              e.currentTarget.style.transform = 'translateY(-2px)'
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 184, 77, 0.25)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 184, 77, 0.15) 0%, rgba(255, 153, 25, 0.12) 100%)'
+              e.currentTarget.style.borderColor = 'rgba(255, 184, 77, 0.40)'
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = 'none'
             }}
           >
             {t('common.view')}
@@ -356,13 +405,22 @@ const ListingCard = ({ listing, variant = 'default' }) => {
                 size="md"
                 radius="md"
                 style={{ 
-                  width: '32px', 
-                  height: '32px',
-                  backgroundColor: '#25D366',
-                  boxShadow: '0 2px 4px rgba(37, 211, 102, 0.3)',
+                  width: '36px', 
+                  height: '36px',
+                  background: 'linear-gradient(135deg, #25D366 0%, #20BA5A 100%)',
+                  boxShadow: '0 4px 12px rgba(37, 211, 102, 0.35), 0 2px 4px rgba(37, 211, 102, 0.25)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.1)'
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 211, 102, 0.45), 0 4px 8px rgba(37, 211, 102, 0.30)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 211, 102, 0.35), 0 2px 4px rgba(37, 211, 102, 0.25)'
                 }}
               >
-                <IconBrandWhatsapp size={16} />
+                <IconBrandWhatsapp size={18} />
               </ActionIcon>
             </Tooltip>
           )}
@@ -378,13 +436,22 @@ const ListingCard = ({ listing, variant = 'default' }) => {
                 size="md"
                 radius="md"
                 style={{ 
-                  width: '32px', 
-                  height: '32px',
-                  backgroundColor: '#0d6efd',
-                  boxShadow: '0 2px 4px rgba(13, 110, 253, 0.3)',
+                  width: '36px', 
+                  height: '36px',
+                  background: 'linear-gradient(135deg, #4A90E2 0%, #357ABD 100%)',
+                  boxShadow: '0 4px 12px rgba(74, 144, 226, 0.35), 0 2px 4px rgba(74, 144, 226, 0.25)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.1)'
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(74, 144, 226, 0.45), 0 4px 8px rgba(74, 144, 226, 0.30)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(74, 144, 226, 0.35), 0 2px 4px rgba(74, 144, 226, 0.25)'
                 }}
               >
-                <IconPhone size={16} />
+                <IconPhone size={18} />
               </ActionIcon>
             </Tooltip>
           )}

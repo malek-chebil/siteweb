@@ -7,6 +7,7 @@ import { showNotification } from '@mantine/notifications'
 import api from '../lib/api'
 import { IconUser, IconList, IconClock, IconCheck, IconX, IconEdit, IconCheck as IconCheckSave, IconX as IconXCancel, IconHourglass } from '@tabler/icons-react'
 import dayjs from 'dayjs'
+import RecentViewsSection from '../components/RecentViewsSection'
 
 const UserProfilePage = () => {
   const { t } = useTranslation()
@@ -257,6 +258,7 @@ const UserProfilePage = () => {
           <Stack gap="md">
             <Title order={4}>Informations du compte</Title>
             <Divider />
+            
             <Group justify="space-between" align="center">
               <Text size="sm" fw={500}>Nom d'utilisateur:</Text>
               {isEditingUsername ? (
@@ -327,6 +329,9 @@ const UserProfilePage = () => {
             </Group>
           </Stack>
         </Paper>
+
+        {/* Annonces récemment consultées */}
+        <RecentViewsSection />
       </Stack>
     </Container>
   )

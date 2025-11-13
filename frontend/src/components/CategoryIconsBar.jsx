@@ -61,36 +61,44 @@ const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
     <Stack gap={{ base: 'sm', sm: 'md' }} style={{ width: '100%' }}>
       <Text 
         size="lg"
-        fw={600} 
+        fw={700} 
         ta="center"
         hiddenFrom="sm"
         style={{ 
           textTransform: 'uppercase', 
-          letterSpacing: '0.5px', 
+          letterSpacing: '1px', 
           fontSize: '0.875rem',
-          color: transparent ? 'rgba(255, 255, 255, 0.95)' : '#212529',
-          textShadow: transparent ? '0 2px 4px rgba(0, 0, 0, 0.7)' : 'none',
+          color: '#2C1810',
+          background: 'linear-gradient(135deg, #8B4513 0%, #5C2E0A 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '8px',
         }}
       >
         {t('home.popularCategories')}
       </Text>
       <Text 
-        size="lg"
-        fw={600} 
+        size="xl"
+        fw={700} 
         ta="center"
         visibleFrom="sm"
         style={{ 
           textTransform: 'uppercase', 
-          letterSpacing: '0.5px',
-          color: transparent ? 'rgba(255, 255, 255, 0.95)' : '#212529',
-          textShadow: transparent ? '0 2px 4px rgba(0, 0, 0, 0.7)' : 'none',
+          letterSpacing: '1px', 
+          color: '#2C1810',
+          background: 'linear-gradient(135deg, #8B4513 0%, #5C2E0A 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '12px',
         }}
       >
         {t('home.popularCategories')}
       </Text>
-      <Group 
-        gap={{ base: 'xs', sm: 'md', md: 'lg' }} 
-        justify="center" 
+      <Group
+        gap={{ base: 'xs', sm: 'md', md: 'lg' }}
+        justify="center"
         wrap="wrap"
         style={{ width: '100%' }}
       >
@@ -110,16 +118,28 @@ const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
                 onClick={() => onCategoryClick(category)}
                 onMouseEnter={(e) => {
                   if (window.innerWidth >= 768) {
-                    e.currentTarget.style.backgroundColor = transparent ? 'rgba(255, 255, 255, 0.2)' : '#f8f9fa'
-                    e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)'
-                    e.currentTarget.style.boxShadow = `0 8px 16px ${style.color}40`
+                    e.currentTarget.style.transform = 'translateY(-6px) scale(1.08)'
+                    e.currentTarget.style.filter = 'brightness(1.1)'
+                    if (transparent) {
+                      e.currentTarget.children[0].style.boxShadow = '0 12px 32px rgba(255, 184, 77, 0.35), 0 6px 16px rgba(139, 69, 19, 0.25)'
+                      e.currentTarget.children[0].style.borderColor = 'rgba(255, 184, 77, 0.50)'
+                    } else {
+                      e.currentTarget.children[0].style.boxShadow = `0 12px 32px ${style.color}50, 0 6px 16px rgba(139, 69, 19, 0.25)`
+                      e.currentTarget.children[0].style.borderColor = `${style.color}60`
+                    }
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (window.innerWidth >= 768) {
-                    e.currentTarget.style.backgroundColor = 'transparent'
                     e.currentTarget.style.transform = 'translateY(0) scale(1)'
-                    e.currentTarget.style.boxShadow = 'none'
+                    e.currentTarget.style.filter = 'brightness(1)'
+                    if (transparent) {
+                      e.currentTarget.children[0].style.boxShadow = '0 6px 20px rgba(139, 69, 19, 0.20), 0 2px 8px rgba(139, 69, 19, 0.15)'
+                      e.currentTarget.children[0].style.borderColor = 'rgba(255, 184, 77, 0.35)'
+                    } else {
+                      e.currentTarget.children[0].style.boxShadow = '0 8px 24px rgba(139, 69, 19, 0.15), 0 4px 12px rgba(139, 69, 19, 0.10)'
+                      e.currentTarget.children[0].style.borderColor = 'rgba(255, 184, 77, 0.30)'
+                    }
                   }
                 }}
               >
@@ -134,23 +154,25 @@ const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
                     position: 'relative',
                     overflow: 'hidden',
                     background: transparent 
-                      ? `linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%)`
-                      : `linear-gradient(135deg, ${style.color}15 0%, ${style.color}08 100%)`,
+                      ? `linear-gradient(135deg, rgba(255, 252, 248, 0.30) 0%, rgba(255, 248, 240, 0.25) 100%)`
+                      : `linear-gradient(135deg, rgba(255, 252, 248, 0.85) 0%, rgba(255, 248, 240, 0.80) 100%)`,
                     border: transparent 
-                      ? `2px solid rgba(255, 255, 255, 0.4)`
-                      : `2px solid ${style.color}30`,
+                      ? `1.5px solid rgba(255, 184, 77, 0.35)`
+                      : `1.5px solid rgba(255, 184, 77, 0.30)`,
                     boxShadow: transparent 
-                      ? '0 4px 12px rgba(0, 0, 0, 0.2)'
-                      : `0 4px 12px ${style.color}20`,
-                    backdropFilter: transparent ? 'blur(8px)' : 'none',
-                    WebkitBackdropFilter: transparent ? 'blur(8px)' : 'none',
+                      ? '0 6px 20px rgba(139, 69, 19, 0.20), 0 2px 8px rgba(139, 69, 19, 0.15)'
+                      : `0 8px 24px rgba(139, 69, 19, 0.15), 0 4px 12px rgba(139, 69, 19, 0.10)`,
+                    backdropFilter: transparent ? 'blur(12px) saturate(180%)' : 'blur(16px) saturate(180%)',
+                    WebkitBackdropFilter: transparent ? 'blur(12px) saturate(180%)' : 'blur(16px) saturate(180%)',
                   }}
                 >
                   {React.createElement(style.IconComponent, {
                     size: 50,
-                    color: transparent ? 'rgba(255, 255, 255, 0.95)' : style.color,
+                    color: transparent ? '#FFB84D' : style.color,
                     className: 'category-icon',
-                    style: transparent ? { filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))' } : undefined,
+                    style: transparent 
+                      ? { filter: 'drop-shadow(0 3px 6px rgba(255, 184, 77, 0.4))' } 
+                      : { filter: `drop-shadow(0 3px 6px ${style.color}40)` },
                   })}
                 </div>
                 <Text 
@@ -158,10 +180,12 @@ const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
                   fw={600} 
                   ta="center" 
                   style={{ 
-                    color: transparent ? 'rgba(255, 255, 255, 0.95)' : '#212529',
+                    color: transparent ? '#2C1810' : '#2C1810',
                     wordBreak: 'break-word',
                     lineHeight: 1.2,
-                    textShadow: transparent ? '0 2px 4px rgba(0, 0, 0, 0.7)' : 'none',
+                    textShadow: 'none',
+                    fontSize: '0.75rem',
+                    letterSpacing: '0.2px',
                   }}
                 >
                   {category}

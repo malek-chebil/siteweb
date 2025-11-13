@@ -106,6 +106,7 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          padding: '8rem',
         }}
       >
         <Stack gap="md" style={{ width: '100%', alignItems: 'center' }}>
