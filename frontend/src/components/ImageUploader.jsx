@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Group, Image, Text, Stack, ActionIcon, Paper, Loader, Center, SimpleGrid, Alert, FileInput } from '@mantine/core'
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone'
-import { supabase } from '../lib/supabase'
+import { supabase } from '../lib/supabase.js'
 import { useTranslation } from 'react-i18next'
 import { showNotification } from '@mantine/notifications'
 import { IconPhoto, IconX, IconUpload, IconAlertCircle } from '@tabler/icons-react'
