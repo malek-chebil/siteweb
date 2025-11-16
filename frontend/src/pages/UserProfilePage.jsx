@@ -91,7 +91,7 @@ const UserProfilePage = () => {
 
   if (isLoading) {
     return (
-      <Container size="md" py="xl">
+      <Container size="md" style={{ paddingTop: '120px', paddingBottom: '48px' }}>
         <Text>{t('common.loading')}</Text>
       </Container>
     )
@@ -99,7 +99,7 @@ const UserProfilePage = () => {
 
   if (error) {
     return (
-      <Container size="md" py="xl">
+      <Container size="md" style={{ paddingTop: '120px', paddingBottom: '48px' }}>
         <Text c="red">Error loading profile: {error.message}</Text>
       </Container>
     )
@@ -113,7 +113,7 @@ const UserProfilePage = () => {
   console.log('Expired count:', stats.expired)
 
   return (
-    <Container size="md" py="xl">
+    <Container size="md" style={{ paddingTop: '120px', paddingBottom: '48px' }}>
       <Stack gap="xl">
         {/* Profile Header */}
         <Paper p="xl" radius="md" withBorder>

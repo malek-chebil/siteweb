@@ -26,14 +26,14 @@ const FavoritesPage = () => {
 
   if (error) {
     return (
-      <Container>
+      <Container style={{ paddingTop: '120px', paddingBottom: '48px' }}>
         <Text color="red">Error loading favorites: {error.message}</Text>
       </Container>
     )
   }
 
   return (
-    <Container size="xl" py="xl">
+    <Container size="xl" style={{ paddingTop: '120px', paddingBottom: '48px' }}>
       <Stack gap="xl">
         <Title
           order={1}

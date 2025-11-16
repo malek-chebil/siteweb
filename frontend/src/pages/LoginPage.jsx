@@ -68,7 +68,7 @@ const LoginPage = () => {
   }
 
   return (
-    <Container size={420} my={60}>
+    <Container size={420} style={{ paddingTop: '120px', paddingBottom: '60px' }}>
       <Stack gap="md" align="center" className="fade-in">
         <Title 
           ta="center" 

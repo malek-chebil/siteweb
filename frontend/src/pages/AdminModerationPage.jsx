@@ -338,14 +338,14 @@ const AdminModerationPage = () => {
 
   if (isLoading) {
     return (
-      <Container>
+      <Container style={{ paddingTop: '120px', paddingBottom: '48px' }}>
         <Text>{t('common.loading')}</Text>
       </Container>
     )
   }
 
       return (
-        <Container size="xl" fluid style={{ maxWidth: '100%', padding: '0 1rem' }}>
+        <Container size="xl" fluid style={{ maxWidth: '100%', padding: '120px 1rem 2rem' }}>
           <Stack gap="lg">
             <Group justify="space-between" align="center" mb="md">
               <Title 

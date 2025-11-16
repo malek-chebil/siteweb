@@ -112,7 +112,7 @@ const HomePage = () => {
 
   if (error) {
     return (
-      <Container>
+      <Container style={{ paddingTop: '120px', paddingBottom: '48px' }}>
         <Text c="red">Error loading listings: {error.message}</Text>
       </Container>
     )

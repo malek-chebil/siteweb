@@ -28,14 +28,14 @@ const AdminDashboard = () => {
 
   if (isLoading) {
     return (
-      <Container>
+      <Container style={{ paddingTop: '120px', paddingBottom: '48px' }}>
         <Text>{t('common.loading')}</Text>
       </Container>
     )
   }
 
   return (
-    <Container size="xl" fluid style={{ maxWidth: '95%', padding: '0 2rem' }}>
+    <Container size="xl" fluid style={{ maxWidth: '95%', padding: '120px 2rem 2rem' }}>
       <Stack gap="xl">
         <Title 
           order={1} 

@@ -59,7 +59,7 @@ const AuthCallbackPage = () => {
   }, [navigate])
 
   return (
-    <Container size="sm" py="xl">
+    <Container size="sm" style={{ paddingTop: '120px', paddingBottom: '48px' }}>
       <Stack align="center" gap="md">
         <Loader size="lg" />
         <Text size="lg" c="dimmed">

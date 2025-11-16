@@ -158,7 +158,7 @@ const ListingDetailPage = () => {
 
   if (isLoading) {
     return (
-      <Container>
+      <Container style={{ paddingTop: '120px', paddingBottom: '48px' }}>
         <Text>{t('common.loading')}</Text>
       </Container>
     )
@@ -166,7 +166,7 @@ const ListingDetailPage = () => {
 
   if (error || !listing) {
     return (
-      <Container>
+      <Container style={{ paddingTop: '120px', paddingBottom: '48px' }}>
         <Text c="red">{t('errors.errorLoadingListing')}</Text>
       </Container>
     )
@@ -183,7 +183,7 @@ const ListingDetailPage = () => {
   ]
 
   return (
-    <Container size="lg" py={{ base: 'md', sm: 'xl' }}>
+    <Container size="lg" style={{ paddingTop: '120px', paddingBottom: '48px' }}>
       <Stack gap={{ base: 'md', sm: 'lg' }}>
         {/* Back Button and Breadcrumbs */}
         <Group justify="space-between" wrap="wrap" gap="xs">
