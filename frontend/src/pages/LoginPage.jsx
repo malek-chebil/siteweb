@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Container, Paper, TextInput, PasswordInput, Button, Stack, Title, Text, Anchor, Divider, Group } from '@mantine/core'
+import { Container, Paper, TextInput, PasswordInput, Button, Stack, Title, Text, Anchor, Divider, Group, Alert } from '@mantine/core'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { showNotification } from '@mantine/notifications'
 import { useAuth } from '../context/AuthContext'
-import { IconBrandGoogle } from '@tabler/icons-react'
+import { IconBrandGoogle, IconAlertCircle } from '@tabler/icons-react'
 
 const LoginPage = () => {
   const { t } = useTranslation()
@@ -14,10 +14,12 @@ const LoginPage = () => {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [emailNotVerifiedError, setEmailNotVerifiedError] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
+    setEmailNotVerifiedError('') // Reset error message
 
     try {
       await signIn(email, password)
@@ -28,6 +30,18 @@ const LoginPage = () => {
       })
       navigate('/')
     } catch (error) {
+      // Check if error is related to email not verified
+      const errorMessage = error.message || ''
+      const isEmailNotVerified = 
+        errorMessage.toLowerCase().includes('email not confirmed') ||
+        errorMessage.toLowerCase().includes('email not verified') ||
+        errorMessage.toLowerCase().includes('email_not_confirmed') ||
+        error.code === 'email_not_confirmed'
+      
+      if (isEmailNotVerified) {
+        setEmailNotVerifiedError(t('auth.emailNotVerified') || 'Votre email n\'est pas vérifié. Veuillez vérifier votre boîte de réception.')
+      }
+      
       showNotification({
         title: t('error'),
         message: error.message || 'Login failed',
@@ -84,7 +98,7 @@ const LoginPage = () => {
           radius="lg"
           style={{
             width: '100%',
-            backgroundColor: '#fff',
+            backgroundColor: '#faf8f3',
             border: '1px solid #e9ecef',
             boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
           }}
@@ -146,6 +160,18 @@ const LoginPage = () => {
               >
                 {t('auth.login')}
               </Button>
+              
+              {emailNotVerifiedError && (
+                <Alert
+                  icon={<IconAlertCircle size={16} />}
+                  title={t('error')}
+                  color="red"
+                  radius="md"
+                  mt="xs"
+                >
+                  {emailNotVerifiedError}
+                </Alert>
+              )}
             </Stack>
           </form>
         </Paper>

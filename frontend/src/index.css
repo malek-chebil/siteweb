@@ -15,7 +15,7 @@ body {
   background-position: center center;
   background-attachment: fixed;
   background-repeat: no-repeat;
-  background-color: #f8f9fa; /* Fallback si l'image ne charge pas */
+  background-color: #faf8f3; /* Fallback crème si l'image ne charge pas */
   color: #212529;
   line-height: 1.6;
   position: relative;
@@ -177,7 +177,7 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f8f9fa;
+  background-color: #faf8f3;
 }
 
 @media (min-width: 577px) and (max-width: 768px) {
@@ -212,7 +212,7 @@ body::before {
 .search-sidebar {
   position: relative;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.90) !important;
+  background-color: rgba(250, 248, 243, 0.90) !important;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }

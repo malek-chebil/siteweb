@@ -268,7 +268,7 @@ export const Layout = () => {
         <AppShell.Header
           p={0}
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backgroundColor: 'rgba(250, 248, 243, 0.95)',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             borderBottom: '1px solid rgba(233, 236, 239, 0.5)',
@@ -352,7 +352,7 @@ export const Layout = () => {
             display: 'flex',
             flexDirection: 'column',
             padding: 0,
-            paddingTop: '56px',
+            paddingTop: 0,
             paddingBottom: '24px',
             flex: 1,
           }}

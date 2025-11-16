@@ -307,7 +307,7 @@ const AdminDashboard = () => {
           radius="lg" 
           withBorder
           style={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)',
+            background: 'linear-gradient(135deg, rgba(250, 248, 243, 0.95) 0%, rgba(248, 245, 240, 0.95) 100%)',
           }}
         >
           <Stack gap="lg">
@@ -559,7 +559,7 @@ const AdminDashboard = () => {
               radius="lg" 
               withBorder
               style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)',
+                background: 'linear-gradient(135deg, rgba(250, 248, 243, 0.95) 0%, rgba(248, 245, 240, 0.95) 100%)',
                 marginTop: '2rem',
               }}
             >

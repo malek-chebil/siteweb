@@ -9,19 +9,16 @@ import api from '../lib/api'
 export const useIsAdmin = () => {
   const { isAuthenticated, loading: authLoading } = useAuth()
 
-  const { data: isAdmin, isLoading } = useQuery(
-    'user-is-admin',
+  const { data: userProfile, isLoading } = useQuery(
+    'user-profile',
     async () => {
       try {
-        // Try to access admin stats endpoint - if user is admin, this will work
-        await api.get('/admin/stats')
-        return true
+        // Get user profile which includes is_admin field
+        const response = await api.get('/users/me')
+        return response.data
       } catch (error) {
-        if (error.response?.status === 403) {
-          return false
-        }
-        // If it's a network error or other error, return false
-        return false
+        // If error, return null (user not authenticated or error)
+        return null
       }
     },
     {
@@ -32,7 +29,7 @@ export const useIsAdmin = () => {
   )
 
   return {
-    isAdmin: isAdmin ?? false,
+    isAdmin: userProfile?.is_admin ?? false,
     isLoading: isLoading || authLoading,
   }
 }

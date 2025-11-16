@@ -105,7 +105,7 @@ const RegisterPage = () => {
           radius="lg"
           style={{
             width: '100%',
-            backgroundColor: '#fff',
+            backgroundColor: '#faf8f3',
             border: '1px solid #e9ecef',
             boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
           }}

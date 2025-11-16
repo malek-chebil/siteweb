@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Numeric, ForeignKey, DateTime, Boolean, Enum
+from sqlalchemy import Column, Integer, String, Text, Numeric, ForeignKey, DateTime, Boolean, Enum, TypeDecorator
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
@@ -10,6 +10,35 @@ class ListingStatus(str, enum.Enum):
     APPROVED = "approved"
     REJECTED = "rejected"
     EXPIRED = "expired"
+
+
+class ListingType(str, enum.Enum):
+    PERSONAL = "personal"
+    COMPANY = "company"
+
+
+class ListingTypeEnum(TypeDecorator):
+    """Custom TypeDecorator to handle ListingType enum mapping."""
+    impl = String
+    cache_ok = True
+    
+    def __init__(self):
+        super().__init__(length=20)
+    
+    def process_bind_param(self, value, dialect):
+        if value is None:
+            return None
+        if isinstance(value, ListingType):
+            return value.value
+        return value
+    
+    def process_result_value(self, value, dialect):
+        if value is None:
+            return None
+        try:
+            return ListingType(value)
+        except ValueError:
+            return ListingType.PERSONAL  # Default fallback
 
 
 class User(Base):
@@ -37,6 +66,12 @@ class Listing(Base):
     whatsapp = Column(String(20), nullable=True)
     category = Column(String(100), nullable=False, index=True)
     status = Column(Enum(ListingStatus), default=ListingStatus.PENDING, nullable=False, index=True)
+    listing_type = Column(
+        ListingTypeEnum(),
+        default=ListingType.PERSONAL,
+        nullable=False,
+        index=True
+    )
     user_id = Column(String, ForeignKey("users.id"), nullable=False, index=True)
     views_count = Column(Integer, default=0, nullable=False)
     expires_at = Column(DateTime(timezone=True), nullable=True, index=True)  # Expiration date for paid ads

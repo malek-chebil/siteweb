@@ -10,53 +10,22 @@ const DAILY_VISITS_COOKIE = 'daily_visits'
 const COOKIE_EXPIRY_DAYS = 365 // 1 an
 
 /**
- * Enregistrer une visite
- * @returns {object} - Statistiques de visite
+ * Enregistrer une visite (DÉSACTIVÉ pour l'anonymat)
+ * @returns {object} - Statistiques anonymes (sans données personnelles)
  */
 export function recordVisit() {
+  // DÉSACTIVÉ pour protéger l'anonymat des utilisateurs
+  // Ne stocke aucune donnée personnelle (pas de cookies, pas de localStorage)
+  // Retourne des statistiques anonymes uniquement
   try {
-    // Compteur total de visites
-    const currentCount = parseInt(getCookie(VISIT_COUNT_COOKIE) || '0')
-    const newCount = currentCount + 1
-    setCookie(VISIT_COUNT_COOKIE, newCount.toString(), COOKIE_EXPIRY_DAYS)
-    
-    // Première visite
-    const firstVisit = getCookie(FIRST_VISIT_COOKIE)
-    if (!firstVisit) {
-      setCookie(FIRST_VISIT_COOKIE, new Date().toISOString(), COOKIE_EXPIRY_DAYS)
-    }
-    
-    // Dernière visite
-    setCookie(LAST_VISIT_COOKIE, new Date().toISOString(), COOKIE_EXPIRY_DAYS)
-    
-    // Visites quotidiennes
-    const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
-    const dailyVisits = getCookieJSON(DAILY_VISITS_COOKIE) || {}
-    
-    if (dailyVisits[today]) {
-      dailyVisits[today] += 1
-    } else {
-      // Nettoyer les anciennes entrées (garder seulement les 30 derniers jours)
-      const thirtyDaysAgo = new Date()
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-      
-      Object.keys(dailyVisits).forEach(date => {
-        if (new Date(date) < thirtyDaysAgo) {
-          delete dailyVisits[date]
-        }
-      })
-      
-      dailyVisits[today] = 1
-    }
-    
-    setCookieJSON(DAILY_VISITS_COOKIE, dailyVisits, COOKIE_EXPIRY_DAYS)
-    
+    // Retourner des stats anonymes sans stocker de données
     return {
-      totalVisits: newCount,
-      firstVisit: firstVisit || new Date().toISOString(),
-      lastVisit: new Date().toISOString(),
-      todayVisits: dailyVisits[today] || 1,
-      dailyVisits: dailyVisits
+      totalVisits: 0,  // Ne pas tracker le nombre de visites
+      firstVisit: null,  // Ne pas stocker la première visite
+      lastVisit: null,  // Ne pas stocker la dernière visite
+      todayVisits: 0,  // Ne pas tracker les visites quotidiennes
+      dailyVisits: {},  // Pas de données quotidiennes
+      isFirstVisit: true  // Toujours considéré comme première visite pour l'anonymat
     }
   } catch (error) {
     console.error('Error recording visit:', error)
@@ -65,24 +34,20 @@ export function recordVisit() {
 }
 
 /**
- * Obtenir les statistiques de visite
- * @returns {object} - Statistiques de visite
+ * Obtenir les statistiques de visite (ANONYMISÉ)
+ * @returns {object} - Statistiques anonymes (sans données personnelles)
  */
 export function getVisitStats() {
+  // Retourner des stats anonymes sans lire de cookies/localStorage
+  // Pour protéger l'anonymat des utilisateurs
   try {
-    const totalVisits = parseInt(getCookie(VISIT_COUNT_COOKIE) || '0')
-    const firstVisit = getCookie(FIRST_VISIT_COOKIE)
-    const lastVisit = getCookie(LAST_VISIT_COOKIE)
-    const dailyVisits = getCookieJSON(DAILY_VISITS_COOKIE) || {}
-    const today = new Date().toISOString().split('T')[0]
-    
     return {
-      totalVisits,
-      firstVisit,
-      lastVisit,
-      todayVisits: dailyVisits[today] || 0,
-      dailyVisits,
-      isFirstVisit: !firstVisit
+      totalVisits: 0,  // Ne pas exposer le nombre de visites
+      firstVisit: null,  // Ne pas exposer la première visite
+      lastVisit: null,  // Ne pas exposer la dernière visite
+      todayVisits: 0,  // Ne pas exposer les visites quotidiennes
+      dailyVisits: {},  // Pas de données quotidiennes
+      isFirstVisit: true  // Toujours considéré comme première visite
     }
   } catch (error) {
     console.error('Error getting visit stats:', error)
@@ -98,29 +63,30 @@ export function getVisitStats() {
 }
 
 /**
- * Obtenir le nombre total de visites
- * @returns {number}
+ * Obtenir le nombre total de visites (ANONYMISÉ)
+ * @returns {number} - Toujours 0 pour l'anonymat
  */
 export function getTotalVisits() {
-  return parseInt(getCookie(VISIT_COUNT_COOKIE) || '0')
+  // Ne pas tracker les visites pour protéger l'anonymat
+  return 0
 }
 
 /**
- * Vérifier si c'est la première visite
- * @returns {boolean}
+ * Vérifier si c'est la première visite (ANONYMISÉ)
+ * @returns {boolean} - Toujours true pour l'anonymat
  */
 export function isFirstVisit() {
-  return !getCookie(FIRST_VISIT_COOKIE)
+  // Toujours considéré comme première visite pour l'anonymat
+  return true
 }
 
 /**
- * Obtenir le nombre de visites aujourd'hui
- * @returns {number}
+ * Obtenir le nombre de visites aujourd'hui (ANONYMISÉ)
+ * @returns {number} - Toujours 0 pour l'anonymat
  */
 export function getTodayVisits() {
-  const dailyVisits = getCookieJSON(DAILY_VISITS_COOKIE) || {}
-  const today = new Date().toISOString().split('T')[0]
-  return dailyVisits[today] || 0
+  // Ne pas tracker les visites quotidiennes pour protéger l'anonymat
+  return 0
 }
 
 /**

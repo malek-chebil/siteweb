@@ -4,6 +4,7 @@ from sqlalchemy import select, func, and_, or_, cast, Date
 from sqlalchemy.orm import selectinload
 from typing import Optional, List
 from datetime import datetime, timezone, timedelta
+import asyncio
 from app.database import get_db
 from app.models import Listing, ListingStatus, ModerationLog, User
 from app.schemas import (
@@ -331,11 +332,13 @@ async def get_admin_stats(
     db: AsyncSession = Depends(get_db),
     current_user: UserModel = Depends(get_current_admin_user),
 ):
-    """Get admin dashboard statistics - OPTIMIZED with single query."""
-    # OPTIMIZED: Single query with GROUP BY instead of 4 separate queries
+    """Get admin dashboard statistics - OPTIMIZED with parallel queries."""
     from sqlalchemy import case
     
-    # Get listing counts by status in one query
+    # OPTIMIZED: Execute all queries in parallel (they're independent)
+    # This reduces total query time compared to sequential execution
+    
+    # Query 1: Get listing counts by status in one query
     stats_query = select(
         func.sum(case((Listing.status == ListingStatus.PENDING, 1), else_=0)).label("pending"),
         func.sum(case((Listing.status == ListingStatus.APPROVED, 1), else_=0)).label("approved"),
@@ -345,19 +348,28 @@ async def get_admin_stats(
         func.sum(Listing.views_count).label("total_views"),
         func.avg(Listing.views_count).label("avg_views"),
     )
-    stats_result = await db.execute(stats_query)
-    stats = stats_result.first()
     
-    # Get total users count
-    total_users = await db.execute(select(func.count(User.id)))
+    # Query 2: Get total users count (lightweight, independent)
+    users_count_query = select(func.count(User.id))
     
-    # Get most viewed listing with user relationship
+    # Query 3: Get most viewed listing with user relationship
+    # OPTIMIZED: Use selectinload to eager load user in same query
     most_viewed_query = select(Listing).where(
         Listing.status == ListingStatus.APPROVED
     ).options(
         selectinload(Listing.user)
     ).order_by(Listing.views_count.desc()).limit(1)
-    most_viewed_result = await db.execute(most_viewed_query)
+    
+    # OPTIMIZED: Execute all queries in parallel using asyncio
+    # SQLAlchemy async supports parallel queries on the same session
+    stats_result, users_result, most_viewed_result = await asyncio.gather(
+        db.execute(stats_query),
+        db.execute(users_count_query),
+        db.execute(most_viewed_query)
+    )
+    
+    stats = stats_result.first()
+    total_users = users_result.scalar_one()
     most_viewed = most_viewed_result.scalar_one_or_none()
     
     return {
@@ -365,7 +377,7 @@ async def get_admin_stats(
         "approved_listings": stats.approved or 0,
         "rejected_listings": stats.rejected or 0,
         "expired_listings": stats.expired or 0,
-        "total_users": total_users.scalar_one(),
+        "total_users": total_users,
         "total_listings": stats.total_listings or 0,
         "total_views": int(stats.total_views or 0),
         "avg_views": float(stats.avg_views or 0),

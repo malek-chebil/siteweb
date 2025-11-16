@@ -1,12 +1,16 @@
-import { Paper, TextInput, Select, Group, Button, Stack, Text, Box } from '@mantine/core'
+import { Paper, TextInput, Select, Group, Button, Stack, Text, Box, useMantineTheme } from '@mantine/core'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { useMediaQuery } from '@mantine/hooks'
 import { IconSearch, IconMapPin, IconCategory } from '@tabler/icons-react'
 import { categories, getCategoryIcon } from '../utils/categoryIcons'
 
 const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const theme = useMantineTheme()
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`)
+  const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`)
 
   const cities = [
    'Tunis',
@@ -62,7 +66,7 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
 
   if (transparent) {
     const inputStyle = {
-      backgroundColor: 'rgba(255, 255, 255, 0.85)',
+      backgroundColor: 'rgba(250, 248, 243, 0.85)',
       border: '2px solid rgba(255, 195, 0, 0.4)',
       color: '#212529',
       fontSize: '1rem',
@@ -75,14 +79,14 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
         fontWeight: 500,
       },
       '&:focus': {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#faf8f3',
         borderColor: 'rgba(255, 195, 0, 0.7)',
         boxShadow: '0 0 0 3px rgba(255, 195, 0, 0.2)',
         color: '#212529',
       },
       '&:hover': {
         borderColor: 'rgba(255, 195, 0, 0.6)',
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backgroundColor: 'rgba(250, 248, 243, 0.95)',
         color: '#212529',
       },
     }
@@ -93,7 +97,6 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
 
     return (
       <Box 
-        p={{ base: 'md', sm: 'xl' }}
         style={{
           backgroundColor: 'transparent',
           backdropFilter: 'none',
@@ -101,28 +104,34 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
           boxShadow: 'none',
           border: 'none',
           width: '100%',
-          maxWidth: '1000px',
+          maxWidth: '100%',
           margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          padding: '8rem',
+          padding: isMobile ? '2rem 1rem' : isTablet ? '4rem 2rem' : '8rem',
+          boxSizing: 'border-box',
         }}
       >
-        <Stack gap="md" style={{ width: '100%', alignItems: 'center' }}>
-          {/* Search Bar */}
+        <Stack gap="md" style={{ width: '100%', alignItems: 'center', maxWidth: '1000px' }}>
+          {/* Line 1: Search Input - Centered placeholder */}
           <TextInput
             placeholder={t('filters.whatAreYouLookingFor')}
             value={filters.search || ''}
             onChange={(e) => onFiltersChange({ ...filters, search: e.target.value })}
             onKeyPress={handleKeyPress}
-            size="lg"
+            size="md"
             radius="md"
             style={{ width: '100%' }}
-            leftSection={<IconSearch size={20} style={iconStyle} />}
+            leftSection={<IconSearch size={18} style={iconStyle} />}
             styles={{
               input: {
                 ...inputStyle,
+                textAlign: 'center',
+                '&::placeholder': {
+                  ...inputStyle['&::placeholder'],
+                  textAlign: 'center',
+                },
                 '&::selection': {
                   backgroundColor: 'rgba(255, 195, 0, 0.3)',
                   color: '#212529',
@@ -135,10 +144,16 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
             }}
           />
 
-          {/* Filters Row */}
-          <Group gap="md" align="flex-end" wrap="wrap" grow style={{ width: '100%' }}>
+          {/* Line 2: Category and Region Selects */}
+          <Group 
+            gap="md" 
+            align="flex-end" 
+            wrap="nowrap" 
+            grow 
+            style={{ width: '100%' }}
+          >
             <Select
-              placeholder={t('filters.allCategories')}
+              placeholder="Catégories"
               data={categories.map(cat => ({
                 value: cat,
                 label: cat,
@@ -149,6 +164,10 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
               size="md"
               radius="md"
               searchable
+              style={{ 
+                flex: '1 1 calc(50% - 8px)',
+                minWidth: 0,
+              }}
               leftSection={selectedCategory ? (() => {
                 const CategoryIcon = getCategoryIcon(selectedCategory)
                 return <CategoryIcon size={18} style={iconStyle} />
@@ -156,9 +175,24 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
               renderOption={({ option }) => {
                 const CategoryIcon = getCategoryIcon(option.value)
                 return (
-                  <Group gap="xs">
-                    <CategoryIcon size={18} style={{ color: '#FFC300' }} />
-                    <Text>{option.label}</Text>
+                  <Group gap="xs" align="flex-start" wrap="nowrap" style={{ width: '100%' }}>
+                    <CategoryIcon 
+                      size={18} 
+                      style={{ 
+                        color: '#FFC300', 
+                        flexShrink: 0,
+                        marginTop: '2px',
+                      }} 
+                    />
+                    <Text 
+                      style={{ 
+                        flex: 1,
+                        wordBreak: 'break-word',
+                        lineHeight: '1.4',
+                      }}
+                    >
+                      {option.label}
+                    </Text>
                   </Group>
                 )
               }}
@@ -178,7 +212,7 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
                   fontWeight: 600,
                 },
                 dropdown: {
-                  backgroundColor: '#fff',
+                  backgroundColor: '#faf8f3',
                 },
                 option: {
                   color: '#212529',
@@ -193,7 +227,7 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
             />
 
             <Select
-              placeholder={t('filters.countryRegionCity')}
+              placeholder="Région"
               data={cities}
               value={filters.city || null}
               onChange={(value) => onFiltersChange({ ...filters, city: value })}
@@ -201,6 +235,10 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
               size="md"
               radius="md"
               searchable
+              style={{ 
+                flex: '1 1 calc(50% - 8px)',
+                minWidth: 0,
+              }}
               leftSection={<IconMapPin size={18} style={iconStyle} />}
               styles={{
                 input: {
@@ -218,7 +256,7 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
                   fontWeight: 600,
                 },
                 dropdown: {
-                  backgroundColor: '#fff',
+                  backgroundColor: '#faf8f3',
                 },
                 option: {
                   color: '#212529',
@@ -233,41 +271,41 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
             />
           </Group>
 
-          {/* Search Button - Centered Below */}
-          <Group justify="center" mt="xs">
-            <Button
-              onClick={handleSearch}
-              size="lg"
-              radius="md"
-              px="xl"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255, 195, 0, 0.85) 0%, rgba(255, 179, 0, 0.85) 100%)',
-                border: '2px solid rgba(255, 195, 0, 0.5)',
-                fontWeight: 600,
-                color: '#fff',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 16px rgba(255, 195, 0, 0.4)',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-                minWidth: '200px',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 195, 0, 0.95) 0%, rgba(255, 179, 0, 0.95) 100%)'
-                e.currentTarget.style.borderColor = 'rgba(255, 195, 0, 0.7)'
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 195, 0, 0.5)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 195, 0, 0.85) 0%, rgba(255, 179, 0, 0.85) 100%)'
-                e.currentTarget.style.borderColor = 'rgba(255, 195, 0, 0.5)'
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 195, 0, 0.4)'
-                e.currentTarget.style.transform = 'translateY(0)'
-              }}
-            >
-              <IconSearch size={20} style={{ marginRight: '8px' }} />
-              {t('common.search')}
-            </Button>
-          </Group>
+          {/* Line 3: Search Button */}
+          <Button
+            onClick={handleSearch}
+            size="md"
+            radius="md"
+            px="xl"
+            fullWidth={isMobile}
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 195, 0, 0.85) 0%, rgba(255, 179, 0, 0.85) 100%)',
+              border: '2px solid rgba(255, 195, 0, 0.5)',
+              fontWeight: 600,
+              color: '#fff',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              boxShadow: '0 4px 16px rgba(255, 195, 0, 0.4)',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+              minWidth: isMobile ? '100%' : '200px',
+              maxWidth: isMobile ? '100%' : '300px',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 195, 0, 0.95) 0%, rgba(255, 179, 0, 0.95) 100%)'
+              e.currentTarget.style.borderColor = 'rgba(255, 195, 0, 0.7)'
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 195, 0, 0.5)'
+              e.currentTarget.style.transform = 'translateY(-2px)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 195, 0, 0.85) 0%, rgba(255, 179, 0, 0.85) 100%)'
+              e.currentTarget.style.borderColor = 'rgba(255, 195, 0, 0.5)'
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 195, 0, 0.4)'
+              e.currentTarget.style.transform = 'translateY(0)'
+            }}
+          >
+            <IconSearch size={18} style={{ marginRight: '8px' }} />
+            {t('common.search')}
+          </Button>
         </Stack>
       </Box>
     )
@@ -279,7 +317,7 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
       radius="lg" 
       withBorder
       style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.80)',
+        backgroundColor: 'rgba(250, 248, 243, 0.80)',
         backdropFilter: 'blur(6px)',
         WebkitBackdropFilter: 'blur(6px)',
         boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
@@ -378,7 +416,7 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
                   },
                 },
                 dropdown: {
-                  backgroundColor: '#fff',
+                  backgroundColor: '#faf8f3',
                 },
               }}
             />
@@ -416,7 +454,7 @@ const FiltersBar = ({ filters, onFiltersChange, onApply, transparent = false }) 
                   },
                 },
                 dropdown: {
-                  backgroundColor: '#fff',
+                  backgroundColor: '#faf8f3',
                 },
               }}
             />

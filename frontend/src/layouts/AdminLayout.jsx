@@ -185,7 +185,7 @@ export const AdminLayout = () => {
           p="md" 
           visibleFrom="sm"
           style={{
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: 'rgba(250, 248, 243, 0.95)',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             borderRight: '1px solid rgba(233, 236, 239, 0.5)'
@@ -203,7 +203,7 @@ export const AdminLayout = () => {
         <AppShell.Header 
         p={{ base: 'xs', sm: 'md' }}
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backgroundColor: 'rgba(250, 248, 243, 0.95)',
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
           borderBottom: '1px solid rgba(233, 236, 239, 0.5)',

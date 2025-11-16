@@ -5,7 +5,7 @@ from sqlalchemy.orm import selectinload
 from typing import List
 from app.database import get_db
 from app.models import Favorite, Listing, User
-from app.schemas import FavoriteResponse, FavoriteListResponse
+from app.schemas import FavoriteResponse, FavoriteListResponse, FavoriteBatchCheckRequest
 from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/favorites", tags=["favorites"])
@@ -144,6 +144,9 @@ async def remove_favorite(
     
     return None
 
+
+# REMOVED: /check-batch endpoint - favorites are now included directly in listings API
+# Use /listings endpoint which includes is_favorited for each listing
 
 @router.get("/check/{listing_id}")
 async def check_favorite(

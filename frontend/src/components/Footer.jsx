@@ -38,7 +38,7 @@ const Footer = () => {
       component="footer"
       className="app-footer"
       style={{
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#faf8f3',
         borderTop: '1px solid #e9ecef',
         marginTop: 'auto',
         padding: '16px 0 12px',

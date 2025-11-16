@@ -106,3 +106,4 @@ desktop.ini
 # Vercel build cache
 .vercel/output/
 
+.env*.local

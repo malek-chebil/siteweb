@@ -111,9 +111,16 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         Get rate limit configuration for specific endpoint.
         Returns (limit, window) tuple.
         """
-        # Stricter limits for authentication endpoints
-        if "/api/v1/auth" in path or "/api/v1/users" in path:
-            return 10, 60  # 10 requests per minute
+        # Stricter limits for authentication endpoints (login, register)
+        if "/api/v1/auth" in path:
+            return 10, 60  # 10 requests per minute for auth endpoints
+
+        # More lenient limits for user profile/stats endpoints (after login)
+        # Stats endpoint is called frequently by frontend, so higher limit
+        if "/api/v1/users/me/stats" in path:
+            return 60, 60  # 60 requests per minute for stats endpoint
+        if "/api/v1/users" in path:
+            return 30, 60  # 30 requests per minute for other user endpoints
 
         # Stricter limits for admin endpoints
         if "/api/v1/admin" in path:
@@ -129,6 +136,18 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         # Skip rate limiting for health checks
         if request.url.path in ["/health", "/"]:
             return await call_next(request)
+
+        # Skip rate limiting for authenticated user endpoints
+        # Authenticated users are already verified by JWT, so less risk of abuse
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer ") and "/api/v1/users" in request.url.path:
+            # User is authenticated - skip rate limiting for user endpoints
+            response = await call_next(request)
+            # Add rate limit headers with high values to indicate no limit
+            response.headers["X-RateLimit-Limit"] = "1000"
+            response.headers["X-RateLimit-Remaining"] = "999"
+            response.headers["X-RateLimit-Reset"] = str(int(time.time()) + 60)
+            return response
 
         # Get client identifier
         identifier = self._get_client_identifier(request)

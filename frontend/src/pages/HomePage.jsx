@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Container, Title, Text, SimpleGrid, Pagination, Stack, Center, Box, Group, Button, useMantineTheme } from '@mantine/core'
 import { useQuery } from 'react-query'
 import { useTranslation } from 'react-i18next'
@@ -11,6 +11,7 @@ import ListingCard from '../components/ListingCard'
 import FiltersBar from '../components/FiltersBar'
 import CategoryIconsBar from '../components/CategoryIconsBar'
 import { recordVisit } from '../utils/visitStats'
+import { useFavoritesBatch } from '../hooks/useFavoritesBatch'
 
 const HomePage = () => {
   const { t } = useTranslation()
@@ -56,6 +57,37 @@ const HomePage = () => {
       return response.data
     }
   )
+
+  // OPTIMIZED: Collect all listing IDs to check favorites in batch
+  const allListingIds = useMemo(() => {
+    const ids = new Set()
+    
+    // Premium listings
+    if (premiumData?.items) {
+      premiumData.items
+        .filter(listing => listing.status === 'approved')
+        .forEach(listing => ids.add(listing.id))
+    }
+    
+    // Most viewed listings
+    if (data?.items) {
+      data.items
+        .filter(listing => listing.status === 'approved')
+        .forEach(listing => ids.add(listing.id))
+    }
+    
+    // All listings for carousel
+    if (allListingsData?.items) {
+      allListingsData.items
+        .filter(listing => listing.status === 'approved')
+        .forEach(listing => ids.add(listing.id))
+    }
+    
+    return Array.from(ids)
+  }, [premiumData, data, allListingsData])
+
+  // OPTIMIZED: Check all favorites in a single batch API call
+  const { favoritesMap } = useFavoritesBatch(allListingIds)
 
   const handleFiltersChange = (newFilters) => {
     setFilters(newFilters)
@@ -113,7 +145,7 @@ const HomePage = () => {
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
               border: '2.5px solid rgba(255, 195, 0, 0.5)',
-              boxShadow: '0 6px 16px rgba(255, 195, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
+                      boxShadow: '0 6px 16px rgba(255, 195, 0, 0.25), inset 0 1px 0 rgba(250, 248, 243, 0.5)',
             }}>
               <IconSparkles size={30} color="#FFC300" strokeWidth={2.5} fill="rgba(255, 195, 0, 0.2)" />
             </div>
@@ -138,7 +170,11 @@ const HomePage = () => {
               {premiumData.items
                 .filter(listing => listing.status === 'approved')
                 .map((listing) => (
-                  <ListingCard key={`premium-${listing.id}`} listing={listing} />
+                  <ListingCard 
+                    key={`premium-${listing.id}`} 
+                    listing={listing} 
+                    isFavorited={favoritesMap[listing.id]}
+                  />
                 ))}
             </SimpleGrid>
           ) : (
@@ -172,7 +208,7 @@ const HomePage = () => {
                     <div style={{
                       padding: '10px',
                       borderRadius: '50%',
-                      background: 'rgba(255, 255, 255, 0.95)',
+                      background: 'rgba(250, 248, 243, 0.95)',
                       backdropFilter: 'blur(10px)',
                       WebkitBackdropFilter: 'blur(10px)',
                       border: '3px solid rgba(255, 195, 0, 0.6)',
@@ -199,7 +235,11 @@ const HomePage = () => {
                     spacing="md"
                   >
                     {mostViewedListings.map((listing) => (
-                      <ListingCard key={`most-viewed-${listing.id}`} listing={listing} />
+                      <ListingCard 
+                        key={`most-viewed-${listing.id}`} 
+                        listing={listing} 
+                        isFavorited={favoritesMap[listing.id]}
+                      />
                     ))}
                   </SimpleGrid>
                 </Stack>
@@ -230,11 +270,11 @@ const HomePage = () => {
                     <div style={{
                       padding: '12px 16px',
                       borderRadius: '8px',
-                      background: 'rgba(255, 255, 255, 0.98)',
+                      background: 'rgba(250, 248, 243, 0.98)',
                       backdropFilter: 'blur(8px)',
                       WebkitBackdropFilter: 'blur(8px)',
                       border: '2px solid rgba(255, 195, 0, 0.4)',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.8)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(250, 248, 243, 0.8)',
                       transform: 'rotate(-2deg)',
                     }}>
                       <IconGridDots size={28} color="#212529" strokeWidth={2} />
@@ -253,7 +293,11 @@ const HomePage = () => {
                     spacing="md"
                   >
                     {allOtherListings.map((listing) => (
-                      <ListingCard key={`all-${listing.id}`} listing={listing} />
+                      <ListingCard 
+                        key={`all-${listing.id}`} 
+                        listing={listing} 
+                        isFavorited={favoritesMap[listing.id]}
+                      />
                     ))}
                   </SimpleGrid>
                 </Stack>
@@ -325,13 +369,17 @@ const HomePage = () => {
                       },
                     }}
                   >
-                    {allActiveListings.map((listing) => (
-                      <Carousel.Slide key={`all-horizontal-${listing.id}`}>
-                        <div style={{ width: '100%', minHeight: '450px', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-                          <ListingCard listing={listing} variant="compact" />
-                        </div>
-                      </Carousel.Slide>
-                    ))}
+                        {allActiveListings.map((listing) => (
+                          <Carousel.Slide key={`all-horizontal-${listing.id}`}>
+                            <div style={{ width: '100%', minHeight: '450px', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+                              <ListingCard 
+                                listing={listing} 
+                                variant="compact" 
+                                isFavorited={favoritesMap[listing.id]}
+                              />
+                            </div>
+                          </Carousel.Slide>
+                        ))}
                   </Carousel>
                 </Box>
               )}

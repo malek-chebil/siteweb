@@ -86,7 +86,7 @@ const ListingCardList = ({ listing }) => {
       radius="md"
       withBorder
       style={{
-        backgroundColor: '#fff',
+        backgroundColor: '#faf8f3',
         transition: 'all 0.3s ease',
         cursor: 'pointer',
         border: '1px solid #e9ecef',

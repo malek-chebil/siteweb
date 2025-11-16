@@ -1,0 +1,80 @@
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cartagespa-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_JWT_SECRET=${SUPABASE_JWT_SECRET}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://cartagespa.com,http://www.cartagespa.com,http://localhost:5173,http://localhost:5174}
+      - DEBUG=${DEBUG:-false}
+    volumes:
+      - ./backend/logs:/app/logs
+    networks:
+      - cartagespa-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://cartagespa.com/api/v1}
+        - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+        - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+    container_name: cartagespa-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - cartagespa-network
+    healthcheck:
+      test: ["CMD", "sh", "-c", "test -f /usr/share/nginx/html/index.html && pgrep nginx > /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  nginx:
+    image: nginx:alpine
+    container_name: cartagespa-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro  # SSL certificates from Certbot
+      - ./nginx/start-nginx-with-ips.sh:/start-nginx.sh:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./nginx/logs:/var/log/nginx:rw  # Nginx logs for fail2ban
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    networks:
+      - cartagespa-network
+    command: ["sh", "/start-nginx.sh"]
+    entrypoint: []
+    # Install docker client in the container
+    # We'll use a different approach - get IPs from network inspection
+
+networks:
+  cartagespa-network:
+    driver: bridge
+

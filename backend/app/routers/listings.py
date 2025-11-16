@@ -5,7 +5,7 @@ from sqlalchemy.orm import selectinload
 from typing import Optional
 from datetime import datetime, timezone, timedelta
 from app.database import get_db
-from app.models import Listing, ListingMedia, ListingStatus, User
+from app.models import Listing, ListingMedia, ListingStatus, ListingType, User
 from app.schemas import (
     ListingCreate,
     ListingUpdate,
@@ -14,6 +14,8 @@ from app.schemas import (
     ListingFilters,
 )
 from app.dependencies import get_current_user, get_optional_user
+from app.utils.query_builder import build_listing_filters_query, get_user_admin_status
+# Favorite system temporarily removed
 
 router = APIRouter(prefix="/listings", tags=["listings"])
 
@@ -24,100 +26,28 @@ async def get_my_listings(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Get current user's listings only."""
-    # Only show listings belonging to the current user
-    query = select(Listing).where(Listing.user_id == current_user.id)
+    """Get current user's listings only - OPTIMIZED."""
+    # Build base query with filters using centralized helper
+    query = select(Listing)
+    query = build_listing_filters_query(
+        query, 
+        filters, 
+        user_id=current_user.id,
+        is_admin=current_user.is_admin,
+        include_expired_check=False  # Users can see all their listings
+    )
     
-    # Apply filters (but user_id filter is already applied above)
-    if filters.city:
-        query = query.where(Listing.city.ilike(f"%{filters.city}%"))
-    
-    if filters.category:
-        query = query.where(Listing.category == filters.category)
-    
-    if filters.min_price is not None:
-        query = query.where(Listing.price >= filters.min_price)
-    
-    if filters.max_price is not None:
-        query = query.where(Listing.price <= filters.max_price)
-    
-    if filters.search:
-        search_term = f"%{filters.search}%"
-        query = query.where(
-            or_(
-                Listing.title.ilike(search_term),
-                Listing.description.ilike(search_term)
-            )
-        )
-    
-    # Filter by period (based on created_at)
-    if filters.period:
-        now = datetime.now(timezone.utc)
-        if filters.period == 'yesterday':
-            yesterday_start = (now - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-            yesterday_end = yesterday_start + timedelta(days=1)
-            query = query.where(
-                and_(
-                    Listing.created_at >= yesterday_start,
-                    Listing.created_at < yesterday_end
-                )
-            )
-        elif filters.period == 'last_week':
-            week_ago = now - timedelta(days=7)
-            query = query.where(Listing.created_at >= week_ago)
-        elif filters.period == 'last_month':
-            month_ago = now - timedelta(days=30)
-            query = query.where(Listing.created_at >= month_ago)
-        # 'all' means no filter, so we don't add any condition
-    
-    # Optionally filter by status (user can see all their listings regardless of status)
-    if filters.status:
-        query = query.where(Listing.status == filters.status)
-    
-    # OPTIMIZED: Use direct COUNT instead of subquery for better performance
+    # Build count query using the same filters
     count_query = select(func.count(Listing.id))
-    # Apply same filters to count query (user_id is already filtered above)
-    count_query = count_query.where(Listing.user_id == current_user.id)
-    if filters.city:
-        count_query = count_query.where(Listing.city.ilike(f"%{filters.city}%"))
-    if filters.category:
-        count_query = count_query.where(Listing.category == filters.category)
-    if filters.min_price is not None:
-        count_query = count_query.where(Listing.price >= filters.min_price)
-    if filters.max_price is not None:
-        count_query = count_query.where(Listing.price <= filters.max_price)
-    if filters.search:
-        search_term = f"%{filters.search}%"
-        count_query = count_query.where(
-            or_(
-                Listing.title.ilike(search_term),
-                Listing.description.ilike(search_term)
-            )
-        )
+    count_query = build_listing_filters_query(
+        count_query,
+        filters,
+        user_id=current_user.id,
+        is_admin=current_user.is_admin,
+        include_expired_check=False
+    )
     
-    # Filter by period (based on created_at) for count query
-    if filters.period:
-        now = datetime.now(timezone.utc)
-        if filters.period == 'yesterday':
-            yesterday_start = (now - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-            yesterday_end = yesterday_start + timedelta(days=1)
-            count_query = count_query.where(
-                and_(
-                    Listing.created_at >= yesterday_start,
-                    Listing.created_at < yesterday_end
-                )
-            )
-        elif filters.period == 'last_week':
-            week_ago = now - timedelta(days=7)
-            count_query = count_query.where(Listing.created_at >= week_ago)
-        elif filters.period == 'last_month':
-            month_ago = now - timedelta(days=30)
-            count_query = count_query.where(Listing.created_at >= month_ago)
-        # 'all' means no filter, so we don't add any condition
-    
-    if filters.status:
-        count_query = count_query.where(Listing.status == filters.status)
-    
+    # Execute count query
     total_result = await db.execute(count_query)
     total = total_result.scalar_one()
     
@@ -153,142 +83,31 @@ async def get_listings(
     db: AsyncSession = Depends(get_db),
     current_user_id: Optional[str] = Depends(get_optional_user),
 ):
-    """Get listings with filtering, search, and pagination."""
-    # Start building query - only show approved listings to non-admins
+    """Get listings with filtering, search, and pagination - OPTIMIZED."""
+    # OPTIMIZED: Get admin status efficiently (single field query)
+    is_admin = await get_user_admin_status(db, current_user_id)
+    
+    # Build base query with filters using centralized helper
     query = select(Listing)
+    query = build_listing_filters_query(
+        query,
+        filters,
+        user_id=None,  # Public listings, not user-specific
+        is_admin=is_admin,
+        include_expired_check=True  # Check expiration for public listings
+    )
     
-    # Check if user is admin (only if authenticated)
-    is_admin = False
-    if current_user_id:
-        admin_check = await db.execute(
-            select(User.is_admin).where(User.id == current_user_id)
-        )
-        is_admin = admin_check.scalar_one_or_none() or False
-    
-    if is_admin:
-        # Admins can see all listings (filtered by status if provided)
-        if filters.status:
-            query = query.where(Listing.status == filters.status)
-    else:
-        # All users (authenticated or not) only see approved listings that are not expired
-        # Users can see their own non-approved listings in /listings/my endpoint, not here
-        now = datetime.now(timezone.utc)
-        query = query.where(
-            and_(
-                Listing.status == ListingStatus.APPROVED,
-                or_(
-                    Listing.expires_at.is_(None),
-                    Listing.expires_at > now
-                )
-            )
-        )
-    
-    # Apply filters
-    if filters.city:
-        query = query.where(Listing.city.ilike(f"%{filters.city}%"))
-    
-    if filters.category:
-        query = query.where(Listing.category == filters.category)
-    
-    if filters.min_price is not None:
-        query = query.where(Listing.price >= filters.min_price)
-    
-    if filters.max_price is not None:
-        query = query.where(Listing.price <= filters.max_price)
-    
-    if filters.is_featured is not None:
-        query = query.where(Listing.is_featured == filters.is_featured)
-    
-    # Filter by period (based on created_at)
-    if filters.period:
-        now = datetime.now(timezone.utc)
-        if filters.period == 'yesterday':
-            yesterday_start = (now - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-            yesterday_end = yesterday_start + timedelta(days=1)
-            query = query.where(
-                and_(
-                    Listing.created_at >= yesterday_start,
-                    Listing.created_at < yesterday_end
-                )
-            )
-        elif filters.period == 'last_week':
-            week_ago = now - timedelta(days=7)
-            query = query.where(Listing.created_at >= week_ago)
-        elif filters.period == 'last_month':
-            month_ago = now - timedelta(days=30)
-            query = query.where(Listing.created_at >= month_ago)
-        # 'all' means no filter, so we don't add any condition
-    
-    if filters.search:
-        search_term = f"%{filters.search}%"
-        query = query.where(
-            or_(
-                Listing.title.ilike(search_term),
-                Listing.description.ilike(search_term)
-            )
-        )
-    
-    # OPTIMIZED: Use direct COUNT instead of subquery for better performance
+    # Build count query using the same filters
     count_query = select(func.count(Listing.id))
-    # Apply same base filters to count query
-    if is_admin:
-        # Admins can see all listings (filtered by status if provided)
-        if filters.status:
-            count_query = count_query.where(Listing.status == filters.status)
-    else:
-        # All users (authenticated or not) only see approved listings that are not expired
-        now = datetime.now(timezone.utc)
-        count_query = count_query.where(
-            and_(
-                Listing.status == ListingStatus.APPROVED,
-                or_(
-                    Listing.expires_at.is_(None),
-                    Listing.expires_at > now
-                )
-            )
-        )
+    count_query = build_listing_filters_query(
+        count_query,
+        filters,
+        user_id=None,
+        is_admin=is_admin,
+        include_expired_check=True
+    )
     
-    # Apply same filters to count
-    if filters.city:
-        count_query = count_query.where(Listing.city.ilike(f"%{filters.city}%"))
-    if filters.category:
-        count_query = count_query.where(Listing.category == filters.category)
-    if filters.min_price is not None:
-        count_query = count_query.where(Listing.price >= filters.min_price)
-    if filters.max_price is not None:
-        count_query = count_query.where(Listing.price <= filters.max_price)
-    if filters.is_featured is not None:
-        count_query = count_query.where(Listing.is_featured == filters.is_featured)
-    
-    # Filter by period (based on created_at) for count query
-    if filters.period:
-        now = datetime.now(timezone.utc)
-        if filters.period == 'yesterday':
-            yesterday_start = (now - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-            yesterday_end = yesterday_start + timedelta(days=1)
-            count_query = count_query.where(
-                and_(
-                    Listing.created_at >= yesterday_start,
-                    Listing.created_at < yesterday_end
-                )
-            )
-        elif filters.period == 'last_week':
-            week_ago = now - timedelta(days=7)
-            count_query = count_query.where(Listing.created_at >= week_ago)
-        elif filters.period == 'last_month':
-            month_ago = now - timedelta(days=30)
-            count_query = count_query.where(Listing.created_at >= month_ago)
-        # 'all' means no filter, so we don't add any condition
-    
-    if filters.search:
-        search_term = f"%{filters.search}%"
-        count_query = count_query.where(
-            or_(
-                Listing.title.ilike(search_term),
-                Listing.description.ilike(search_term)
-            )
-        )
-    
+    # Execute count query
     total_result = await db.execute(count_query)
     total = total_result.scalar_one()
     
@@ -341,13 +160,8 @@ async def get_listing(
             detail="Listing not found"
         )
     
-    # Check if user is admin (only if authenticated)
-    is_admin = False
-    if current_user_id:
-        user_result = await db.execute(
-            select(User.is_admin).where(User.id == current_user_id)
-        )
-        is_admin = user_result.scalar_one_or_none() or False
+    # OPTIMIZED: Get admin status efficiently (single field query)
+    is_admin = await get_user_admin_status(db, current_user_id)
     
     # Only show approved and non-expired listings to non-owners/non-admins
     # Owners and admins can see their own/pending/rejected/expired listings

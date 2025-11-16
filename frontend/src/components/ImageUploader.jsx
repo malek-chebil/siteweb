@@ -293,7 +293,7 @@ const ImageUploader = ({ value = [], onChange, maxImages = 10 }) => {
       />
 
       {allImages.length > 0 && (
-        <Paper p="md" radius="md" withBorder style={{ backgroundColor: '#f8f9fa' }}>
+        <Paper p="md" radius="md" withBorder style={{ backgroundColor: '#faf8f3' }}>
           <Text size="sm" fw={500} mb="md">
             Images ({value.length} uploadée{value.length > 1 ? 's' : ''})
           </Text>
@@ -309,7 +309,7 @@ const ImageUploader = ({ value = [], onChange, maxImages = 10 }) => {
                 withBorder
                 style={{
                   position: 'relative',
-                  backgroundColor: '#fff',
+                  backgroundColor: '#faf8f3',
                   aspectRatio: '1',
                   overflow: 'hidden',
                   border: item.uploaded ? '2px solid #4caf50' : '2px solid #ffc300',

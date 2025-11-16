@@ -82,10 +82,38 @@ class SecurityEvent:
     DIRECTORY_TRAVERSAL_ATTEMPT = "directory_traversal_attempt"
 
 
+def mask_ip(ip: str) -> str:
+    """
+    Mask IP address for anonymity.
+    Masks the last 2 octets of IPv4 addresses.
+    """
+    if not ip or ip == "unknown":
+        return "anonymous"
+    
+    # Handle IPv4 addresses
+    parts = ip.split('.')
+    if len(parts) == 4:
+        try:
+            # Mask last 2 octets: 192.168.1.100 -> 192.168.xxx.xxx
+            return f"{parts[0]}.{parts[1]}.xxx.xxx"
+        except (ValueError, IndexError):
+            return "anonymous"
+    
+    # Handle IPv6 addresses (simplified - mask last 4 groups)
+    if ':' in ip:
+        parts = ip.split(':')
+        if len(parts) >= 4:
+            return ':'.join(parts[:2]) + ':xxxx:xxxx:xxxx:xxxx'
+        return "anonymous"
+    
+    return "anonymous"
+
+
 def get_client_ip(request: Request) -> str:
     """
-    Get client IP address from request.
+    Get client IP address from request (ANONYMIZED).
     Considers X-Forwarded-For header for proxy/load balancer scenarios.
+    Returns masked IP for anonymity.
     """
     forwarded_for = request.headers.get("X-Forwarded-For")
     if forwarded_for:
@@ -94,7 +122,8 @@ def get_client_ip(request: Request) -> str:
     else:
         ip = request.client.host if request.client else "unknown"
     
-    return ip
+    # Anonymize IP before returning
+    return mask_ip(ip)
 
 
 def get_user_agent(request: Request) -> str:

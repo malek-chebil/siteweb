@@ -52,6 +52,7 @@ const ListingEditorPage = () => {
       description: '',
       city: '',
       category: '',
+      listing_type: 'personal',
       price: '',
       phone: '',
       whatsapp: '',
@@ -79,6 +80,7 @@ const ListingEditorPage = () => {
           description: data.description,
           city: data.city,
           category: data.category,
+          listing_type: data.listing_type || 'personal',
           price: data.price?.toString() || '',
           phone: data.phone || '',
           whatsapp: data.whatsapp || '',
@@ -157,7 +159,7 @@ const ListingEditorPage = () => {
 
   if (isEdit && isLoading) {
     return (
-      <Container size="md" py="xl" mt="md">
+      <Container size="md" style={{ paddingTop: '120px' }} pb="xl">
         <Text>{t('common.loading')}</Text>
       </Container>
     )
@@ -166,7 +168,7 @@ const ListingEditorPage = () => {
   // Check if listing is approved and user is not admin
   if (isEdit && listing && listing.status === 'approved' && !listing.user?.is_admin) {
     return (
-      <Container size="md" py="xl" mt="md">
+      <Container size="md" style={{ paddingTop: '120px' }} pb="xl">
         <Paper p="xl" radius="md" withBorder>
           <Stack align="center" gap="md">
             <Text size="xl" fw={600} c="yellow.6">
@@ -186,7 +188,7 @@ const ListingEditorPage = () => {
   }
 
   return (
-    <Container size="md" pt="2xl" pb="lg">
+    <Container size="md" style={{ paddingTop: '120px' }} pb="lg">
       <Paper p="md" radius="md" withBorder>
         <Title order={2} mb="xl">
           {isEdit ? t('listing.editListing') : t('listing.addListing')}
@@ -241,6 +243,17 @@ const ListingEditorPage = () => {
                 }}
               />
             </Group>
+
+            <Select
+              label={t('listing.listingType')}
+              placeholder={t('listing.listingType')}
+              data={[
+                { value: 'personal', label: t('listing.personal') },
+                { value: 'company', label: t('listing.company') },
+              ]}
+              required
+              {...form.getInputProps('listing_type')}
+            />
 
             <NumberInput
               label={t('listing.price')}

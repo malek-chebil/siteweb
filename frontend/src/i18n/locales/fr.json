@@ -33,7 +33,8 @@
     "loginSuccess": "Connexion réussie",
     "logoutSuccess": "Déconnexion réussie",
     "continueWithGoogle": "Continuer avec Google",
-    "or": "OU"
+    "or": "OU",
+    "emailNotVerified": "Votre email n'est pas vérifié. Veuillez vérifier votre boîte de réception et cliquer sur le lien de confirmation."
   },
   "listing": {
     "title": "Titre",
@@ -43,6 +44,9 @@
     "phone": "Téléphone",
     "whatsapp": "WhatsApp",
     "category": "Catégorie",
+    "listingType": "Type d'annonce",
+    "personal": "Particulier",
+    "company": "Entreprise",
     "photos": "Photos",
     "addListing": "Ajouter une annonce",
     "editListing": "Modifier l'annonce",

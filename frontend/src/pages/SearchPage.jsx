@@ -14,6 +14,7 @@ const SearchPage = () => {
   const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const [activeTab, setActiveTab] = useState(() => searchParams.get('listing_type') || 'all')
   
   // Scroll to top when page loads or search params change
   useEffect(() => {
@@ -29,6 +30,7 @@ const SearchPage = () => {
       const min_priceParam = searchParams.get('min_price')
       const max_priceParam = searchParams.get('max_price')
       const period = searchParams.get('period') || 'all'
+      const listing_type = searchParams.get('listing_type') || ''
       const has_images = searchParams.get('has_images') === 'true'
       const is_featured = searchParams.get('is_featured') === 'true'
       const pageParam = searchParams.get('page')
@@ -45,6 +47,7 @@ const SearchPage = () => {
         min_price,
         max_price,
         period: String(period),
+        listing_type: listing_type && listing_type !== 'all' ? String(listing_type) : null,
         has_images: Boolean(has_images),
         is_featured: is_featured ? true : null,
         page: validPage,
@@ -59,6 +62,7 @@ const SearchPage = () => {
         min_price: null,
         max_price: null,
         period: 'all',
+        listing_type: null,
         has_images: false,
         is_featured: null,
         page: 1,
@@ -85,6 +89,7 @@ const SearchPage = () => {
       appliedFilters.min_price ||
       appliedFilters.max_price ||
       (appliedFilters.period && appliedFilters.period !== 'all') ||
+      appliedFilters.listing_type ||
       appliedFilters.has_images ||
       appliedFilters.is_featured
     )
@@ -95,6 +100,7 @@ const SearchPage = () => {
     const newFilters = parseFiltersFromURL()
     setFilters(newFilters)
     setAppliedFilters(newFilters)
+    setActiveTab(newFilters.listing_type || 'all')
   }, [searchParams])
 
   // Create a stable, serializable query key
@@ -110,6 +116,7 @@ const SearchPage = () => {
       appliedFilters.min_price || 0,
       appliedFilters.max_price || 0,
       appliedFilters.period || 'all',
+      appliedFilters.listing_type || 'all',
       appliedFilters.page || 1,
     ]
   }, [appliedFilters])
@@ -127,6 +134,7 @@ const SearchPage = () => {
       appliedFilters.min_price || 0,
       appliedFilters.max_price || 0,
       appliedFilters.period || 'all',
+      appliedFilters.listing_type || 'all',
       appliedFilters.page || 1,
     ]
   }, [appliedFilters])
@@ -143,6 +151,9 @@ const SearchPage = () => {
         Object.entries(backendFilters).forEach(([key, value]) => {
           if (value !== null && value !== '' && value !== undefined && key !== 'has_images' && key !== 'page_size') {
             if (key === 'period' && value === 'all') {
+              return
+            }
+            if (key === 'listing_type' && !value) {
               return
             }
             params.append(key, String(value))
@@ -178,6 +189,9 @@ const SearchPage = () => {
             if (key === 'period' && value === 'all') {
               return
             }
+            if (key === 'listing_type' && !value) {
+              return
+            }
             params.append(key, String(value))
           }
         })
@@ -210,10 +224,26 @@ const SearchPage = () => {
       if (filters.min_price) params.set('min_price', String(filters.min_price))
       if (filters.max_price) params.set('max_price', String(filters.max_price))
       if (filters.period && filters.period !== 'all') params.set('period', String(filters.period))
+      if (filters.listing_type && filters.listing_type !== 'all') params.set('listing_type', String(filters.listing_type))
       if (filters.has_images) params.set('has_images', 'true')
       if (filters.is_featured) params.set('is_featured', 'true')
       setSearchParams(params)
     }
+  }
+
+  const handleTabChange = (value) => {
+    setActiveTab(value)
+    const newFilters = { ...filters, listing_type: value !== 'all' ? value : null, page: 1 }
+    setFilters(newFilters)
+    setAppliedFilters(newFilters)
+    const params = new URLSearchParams(searchParams)
+    if (value !== 'all') {
+      params.set('listing_type', value)
+    } else {
+      params.delete('listing_type')
+    }
+    params.delete('page')
+    setSearchParams(params)
   }
 
   const handleClear = () => {
@@ -420,7 +450,7 @@ const SearchPage = () => {
               )}
 
               {/* Tabs */}
-              <Tabs defaultValue="all">
+              <Tabs value={activeTab} onChange={handleTabChange}>
                 <Tabs.List>
                   <Tabs.Tab value="all">{t('search.allListings')}</Tabs.Tab>
                   <Tabs.Tab value="personal">{t('search.personal')}</Tabs.Tab>

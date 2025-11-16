@@ -9,7 +9,7 @@ import { getCategoryIcon } from '../utils/categoryIcons'
 import { useAuth } from '../context/AuthContext'
 import api from '../lib/api'
 
-const ListingCard = ({ listing, variant = 'default' }) => {
+const ListingCard = ({ listing, variant = 'default', isFavorited: propIsFavorited }) => {
   const navigate = useNavigate()
   const { t, i18n } = useTranslation()
   const { isAuthenticated } = useAuth()
@@ -29,21 +29,29 @@ const ListingCard = ({ listing, variant = 'default' }) => {
   const gap = isCompact ? '6px' : 'xs'
   const badgesGap = isCompact ? '6px' : '6px'
   
-  // Check if listing is favorited
+  // OPTIMIZED: Use prop if provided (from batch check), otherwise fallback to individual check
+  // This allows parent components to use batch API calls
   const { data: favoriteCheck } = useQuery(
     ['favorite-check', listing.id],
     async () => {
       if (!isAuthenticated) return { is_favorited: false }
-      const response = await api.get(`/favorites/check/${listing.id}`)
-      return response.data
+      try {
+        const response = await api.get(`/favorites/check/${listing.id}`)
+        return response.data
+      } catch (error) {
+        // If error (e.g., 500), return false to prevent UI breaking
+        console.error('Error checking favorite:', error)
+        return { is_favorited: false }
+      }
     },
     {
-      enabled: isAuthenticated,
+      enabled: isAuthenticated && propIsFavorited === undefined, // Only check if prop not provided
       staleTime: 1000 * 60 * 5, // 5 minutes
     }
   )
   
-  const isFavorited = favoriteCheck?.is_favorited || false
+  // Use prop if provided, otherwise use query result
+  const isFavorited = propIsFavorited !== undefined ? propIsFavorited : (favoriteCheck?.is_favorited || false)
   
   // Toggle favorite mutation
   const toggleFavoriteMutation = useMutation(

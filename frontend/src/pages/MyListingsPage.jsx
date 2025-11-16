@@ -27,7 +27,7 @@ const MyListingsPage = () => {
   const myListings = data?.items || []
 
   return (
-    <Container size="xl">
+    <Container size="xl" style={{ paddingTop: '120px' }}>
       <Stack>
         <Group justify="space-between" mb="xl">
           <Title 

@@ -1,5 +1,6 @@
 import React from 'react'
-import { Group, Stack, Text } from '@mantine/core'
+import { Group, Stack, Text, useMantineTheme } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 import { useTranslation } from 'react-i18next'
 import { categories } from '../utils/categoryIcons'
 import { 
@@ -56,6 +57,9 @@ const getCategoryIconStyle = (category) => {
 
 const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
   const { t } = useTranslation()
+  const theme = useMantineTheme()
+  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`)
+  const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`)
 
   return (
     <Stack gap={{ base: 'sm', sm: 'md' }} style={{ width: '100%' }}>
@@ -117,7 +121,7 @@ const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
                 }}
                 onClick={() => onCategoryClick(category)}
                 onMouseEnter={(e) => {
-                  if (window.innerWidth >= 768) {
+                  if (!isMobile) {
                     e.currentTarget.style.transform = 'translateY(-6px) scale(1.08)'
                     e.currentTarget.style.filter = 'brightness(1.1)'
                     if (transparent) {
@@ -130,7 +134,7 @@ const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
                   }
                 }}
                 onMouseLeave={(e) => {
-                  if (window.innerWidth >= 768) {
+                  if (!isMobile) {
                     e.currentTarget.style.transform = 'translateY(0) scale(1)'
                     e.currentTarget.style.filter = 'brightness(1)'
                     if (transparent) {
@@ -146,13 +150,16 @@ const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
                 <div
                   className="category-icon-box"
                   style={{
-                    borderRadius: '16px',
+                    borderRadius: isMobile ? '12px' : '16px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     transition: 'all 0.3s ease',
                     position: 'relative',
                     overflow: 'hidden',
+                    width: isMobile ? '60px' : isTablet ? '70px' : '80px',
+                    height: isMobile ? '60px' : isTablet ? '70px' : '80px',
+                    padding: isMobile ? '8px' : '12px',
                     background: transparent 
                       ? `linear-gradient(135deg, rgba(255, 252, 248, 0.30) 0%, rgba(255, 248, 240, 0.25) 100%)`
                       : `linear-gradient(135deg, rgba(255, 252, 248, 0.85) 0%, rgba(255, 248, 240, 0.80) 100%)`,
@@ -167,7 +174,7 @@ const CategoryIconsBar = ({ onCategoryClick, transparent = false }) => {
                   }}
                 >
                   {React.createElement(style.IconComponent, {
-                    size: 50,
+                    size: isMobile ? 40 : isTablet ? 45 : 50,
                     color: transparent ? '#FFB84D' : style.color,
                     className: 'category-icon',
                     style: transparent 

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List
 from datetime import datetime, date
-from app.models import ListingStatus
+from app.models import ListingStatus, ListingType
 from app.utils.sanitizer import sanitize_html, sanitize_text, sanitize_phone, sanitize_url
 
 
@@ -63,6 +63,7 @@ class ListingBase(BaseModel):
     phone: Optional[str] = Field(None, max_length=20)
     whatsapp: Optional[str] = Field(None, max_length=20)
     category: str = Field(..., min_length=2, max_length=100)
+    listing_type: ListingType = Field(default=ListingType.PERSONAL)
     is_featured: bool = False
 
     @field_validator('title')
@@ -135,6 +136,7 @@ class ListingUpdate(BaseModel):
     phone: Optional[str] = Field(None, max_length=20)
     whatsapp: Optional[str] = Field(None, max_length=20)
     category: Optional[str] = Field(None, min_length=2, max_length=100)
+    listing_type: Optional[ListingType] = None
     media_urls: Optional[List[str]] = None
     is_featured: Optional[bool] = None
 
@@ -213,6 +215,7 @@ class ListingResponse(ListingBase):
     updated_at: Optional[datetime]
     media: List[ListingMediaResponse] = []
     user: Optional["UserResponse"] = None
+    # is_favorited: Temporarily removed - Favorite system disabled
     
     class Config:
         from_attributes = True
@@ -286,6 +289,7 @@ class ListingFilters(BaseModel):
     status: Optional[ListingStatus] = None  # For admin only
     is_featured: Optional[bool] = None
     period: Optional[str] = None  # all, yesterday, last_week, last_month
+    listing_type: Optional[ListingType] = None  # personal, company
     page: int = Field(1, ge=1)
     page_size: int = Field(20, ge=1, le=100)
 
@@ -308,4 +312,8 @@ class FavoriteListResponse(BaseModel):
     page: int
     page_size: int
     total_pages: int
+
+
+class FavoriteBatchCheckRequest(BaseModel):
+    listing_ids: List[int] = Field(..., min_items=1, max_items=100)
 

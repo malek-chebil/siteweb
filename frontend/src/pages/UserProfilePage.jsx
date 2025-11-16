@@ -5,14 +5,16 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { showNotification } from '@mantine/notifications'
 import api from '../lib/api'
-import { IconUser, IconList, IconClock, IconCheck, IconX, IconEdit, IconCheck as IconCheckSave, IconX as IconXCancel, IconHourglass } from '@tabler/icons-react'
+import { IconUser, IconList, IconClock, IconCheck, IconX, IconEdit, IconCheck as IconCheckSave, IconX as IconXCancel, IconHourglass, IconSettings } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import RecentViewsSection from '../components/RecentViewsSection'
+import { useIsAdmin } from '../hooks/useIsAdmin'
 
 const UserProfilePage = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { isAdmin } = useIsAdmin()
   const [isEditingUsername, setIsEditingUsername] = useState(false)
   const [usernameValue, setUsernameValue] = useState('')
 
@@ -139,13 +141,25 @@ const UserProfilePage = () => {
                 </Text>
               </Stack>
             </Group>
-            <Button
-              variant="light"
-              leftSection={<IconEdit size={16} />}
-              onClick={() => navigate('/my-listings')}
-            >
-              Mes annonces
-            </Button>
+            <Group gap="xs">
+              {isAdmin && (
+                <Button
+                  variant="filled"
+                  color="orange"
+                  leftSection={<IconSettings size={16} />}
+                  onClick={() => navigate('/admin')}
+                >
+                  {t('admin.adminPanel')}
+                </Button>
+              )}
+              <Button
+                variant="light"
+                leftSection={<IconEdit size={16} />}
+                onClick={() => navigate('/my-listings')}
+              >
+                Mes annonces
+              </Button>
+            </Group>
           </Group>
         </Paper>
 
